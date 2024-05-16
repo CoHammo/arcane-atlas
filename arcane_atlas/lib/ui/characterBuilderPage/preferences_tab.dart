@@ -31,27 +31,39 @@ class _PreferencesTabState extends State<PreferencesTab>
               onChanged: (value) => mCharacter!.name = value,
               decoration: const InputDecoration(
                   border: OutlineInputBorder(), labelText: 'Character Name'),
-              style: const TextStyle(fontSize: 20),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
         ),
         const SizedBox(height: 25),
-        const Center(child: LargeText('Select Preferences', bold: false)),
+        Text(
+          'Select Preferences',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        smallSpace,
         for (var pref in mCharacter!.prefs.keys)
           SwitchListTile(
-              title: SmallText('Allow $pref'),
+              title: Text(
+                'Allow $pref',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
               value: mCharacter!.prefs[pref] ?? false,
               onChanged: (value) =>
                   setState(() => mCharacter!.prefs[pref] = value)),
         const Divider(thickness: 2, height: 50),
-        const Text(
+        Text(
           'Select Allowed Sources',
           textAlign: TextAlign.center,
-          textScaler: largeText,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
-        for (var source in realm.all<Source>())
+        smallSpace,
+        for (var source in mCharacter!.allowedSources)
           SwitchListTile(
-            title: SmallText(source.name),
+            title: Text(
+              source.name,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             value: mCharacter!.allowedSources.value.contains(source),
             onChanged: (bool? value) {
               setState(() {
@@ -61,7 +73,6 @@ class _PreferencesTabState extends State<PreferencesTab>
               });
             },
           ),
-        const SizedBox(height: 100),
       ],
     );
   }

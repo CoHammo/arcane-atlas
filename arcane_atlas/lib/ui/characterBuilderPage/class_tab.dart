@@ -179,15 +179,15 @@ class _ClassTabState extends State<ClassTab>
                 smallSpace,
               ],
               smallSpace,
-              FilledButton(
-                onPressed: () => setState(() => mCharacter!.updateClass(null)),
-                style: FilledButton.styleFrom(
-                  shape: dndButtonShape,
-                  padding: EdgeInsets.zero,
-                ),
-                child: const SmallText('Change Class'),
-              ),
             ],
+            FilledButton(
+              onPressed: () => setState(() => mCharacter!.updateClass(null)),
+              style: FilledButton.styleFrom(
+                shape: dndButtonShape,
+                padding: EdgeInsets.zero,
+              ),
+              child: const SmallText('Change Class'),
+            ),
           ],
         );
       }

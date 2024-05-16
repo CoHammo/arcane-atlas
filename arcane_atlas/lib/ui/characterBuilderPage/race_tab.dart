@@ -29,14 +29,14 @@ class _RaceTabState extends State<RaceTab> with AutomaticKeepAliveClientMixin {
     }
   }
 
+  var allowedRaces = realm.query<Race>('isSubrace == false && source IN \$0',
+      [mCharacter!.allowedSources.value]);
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Watch((context) {
       if (mCharacter!.race == null) {
-        var allowedRaces = realm.query<Race>(
-            'isSubrace == false && source IN \$0',
-            [mCharacter!.allowedSources.value]);
         return ListView.separated(
           itemCount: allowedRaces.length,
           itemBuilder: (context, index) {
@@ -46,9 +46,9 @@ class _RaceTabState extends State<RaceTab> with AutomaticKeepAliveClientMixin {
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    MediumText(
+                    Text(
                       '${allowedRaces[index].name} (${allowedRaces[index].subraces.length} Subraces)',
-                      bold: false,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                     Text(allowedRaces[index].abilityIncreaseString()),
                   ],
@@ -63,7 +63,7 @@ class _RaceTabState extends State<RaceTab> with AutomaticKeepAliveClientMixin {
                       builder: (context) =>
                           RaceInfoAlertDialog(allowedRaces[index]),
                     ),
-                    child: const SmallText('Info'),
+                    child: const Text('Info'),
                   ),
                 ),
                 children: [

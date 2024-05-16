@@ -139,7 +139,7 @@ class DndCard extends StatelessWidget {
     return Card.outlined(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
-          Radius.circular(5),
+          Radius.circular(4),
         ),
       ),
       elevation: 2,
@@ -285,7 +285,10 @@ class DndFloatingButton extends StatelessWidget {
     return FloatingActionButton.extended(
       extendedPadding: const EdgeInsets.symmetric(horizontal: 10),
       onPressed: onPressed,
-      label: MediumText(label, bold: false),
+      label: Text(
+        label,
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
     );
   }
 }
@@ -513,7 +516,7 @@ class ItemListTile extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              MediumText(item.name, bold: false),
+              Text(item.name, style: Theme.of(context).textTheme.titleLarge),
               if (subtitle != null) Text(subtitle!),
             ],
           ),

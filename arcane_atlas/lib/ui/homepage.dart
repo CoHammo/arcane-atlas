@@ -14,23 +14,29 @@ class ArcaneAtlas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Gamecraft',
+      title: 'Arcane Atlas',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.red,
-          inversePrimary: Colors.red,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+        fontFamily: 'Sarala',
+        textTheme: const TextTheme(
+          titleLarge: TextStyle(fontWeight: FontWeight.normal),
+          titleMedium: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+          titleSmall: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+          labelLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
+          labelMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
         ),
+        scaffoldBackgroundColor: Colors.white,
         useMaterial3: true,
       ),
       darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.red,
-          inversePrimary: Colors.red,
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+        textTheme: const TextTheme(titleLarge: TextStyle(fontSize: 20)),
+        scaffoldBackgroundColor: Color.fromARGB(255, 43, 43, 43),
         useMaterial3: true,
       ),
+      themeMode: ThemeMode.light,
       scrollBehavior: DraggableScrollBehavior(),
-      home: const HomePage(title: 'Gamecraft'),
+      home: const HomePage(),
     );
   }
 }
@@ -38,9 +44,8 @@ class ArcaneAtlas extends StatelessWidget {
 /// Homepage of the app. It contains two pages, [CharactersHome] and
 /// [CampaignsHome], and will always be on one of those two pages.
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
-
-  final String title;
+  const HomePage({super.key});
+  final String title = 'Arcane Atlas';
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -86,8 +91,10 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         builder: (context, controller, child) {
-          return DndFloatingButton('Create Character',
-              () => controller.isOpen ? controller.close() : controller.open());
+          return DndFloatingButton(
+            'Create Character',
+            () => controller.isOpen ? controller.close() : controller.open(),
+          );
         },
       ),
       bottomNavigationBar: NavigationBar(
