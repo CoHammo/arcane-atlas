@@ -25,7 +25,7 @@ class Spell extends $Spell with RealmEntity, RealmObjectBase, RealmObject {
     bool ritual = false,
     String? materials,
     String? school,
-    Iterable<int> componentsBack = const [],
+    Iterable<int> components = const [],
     bool characterBasedDamage = false,
     DiceRoller? dice,
     Iterable<Source> sources = const [],
@@ -55,7 +55,7 @@ class Spell extends $Spell with RealmEntity, RealmObjectBase, RealmObject {
     RealmObjectBase.set(this, 'materials', materials);
     RealmObjectBase.set(this, 'school', school);
     RealmObjectBase.set<RealmList<int>>(
-        this, 'componentsBack', RealmList<int>(componentsBack));
+        this, '_components', RealmList<int>(components));
     RealmObjectBase.set(this, 'characterBasedDamage', characterBasedDamage);
     RealmObjectBase.set(this, 'dice', dice);
     RealmObjectBase.set<RealmList<Source>>(
@@ -149,10 +149,10 @@ class Spell extends $Spell with RealmEntity, RealmObjectBase, RealmObject {
   set school(String? value) => RealmObjectBase.set(this, 'school', value);
 
   @override
-  RealmList<int> get componentsBack =>
-      RealmObjectBase.get<int>(this, 'componentsBack') as RealmList<int>;
+  RealmList<int> get _components =>
+      RealmObjectBase.get<int>(this, '_components') as RealmList<int>;
   @override
-  set componentsBack(covariant RealmList<int> value) =>
+  set _components(covariant RealmList<int> value) =>
       throw RealmUnsupportedSetError();
 
   @override
@@ -215,7 +215,7 @@ class Spell extends $Spell with RealmEntity, RealmObjectBase, RealmObject {
       'ritual': ritual.toEJson(),
       'materials': materials.toEJson(),
       'school': school.toEJson(),
-      'componentsBack': componentsBack.toEJson(),
+      '_components': _components.toEJson(),
       'characterBasedDamage': characterBasedDamage.toEJson(),
       'dice': dice.toEJson(),
       'sources': sources.toEJson(),
@@ -240,7 +240,7 @@ class Spell extends $Spell with RealmEntity, RealmObjectBase, RealmObject {
         'ritual': EJsonValue ritual,
         'materials': EJsonValue materials,
         'school': EJsonValue school,
-        'componentsBack': EJsonValue componentsBack,
+        '_components': EJsonValue _components,
         'characterBasedDamage': EJsonValue characterBasedDamage,
         'dice': EJsonValue dice,
         'sources': EJsonValue sources,
@@ -260,7 +260,7 @@ class Spell extends $Spell with RealmEntity, RealmObjectBase, RealmObject {
           ritual: fromEJson(ritual),
           materials: fromEJson(materials),
           school: fromEJson(school),
-          componentsBack: fromEJson(componentsBack),
+          components: fromEJson(_components),
           characterBasedDamage: fromEJson(characterBasedDamage),
           dice: fromEJson(dice),
           sources: fromEJson(sources),
@@ -288,7 +288,7 @@ class Spell extends $Spell with RealmEntity, RealmObjectBase, RealmObject {
       SchemaProperty('ritual', RealmPropertyType.bool),
       SchemaProperty('materials', RealmPropertyType.string, optional: true),
       SchemaProperty('school', RealmPropertyType.string, optional: true),
-      SchemaProperty('componentsBack', RealmPropertyType.int,
+      SchemaProperty('_components', RealmPropertyType.int,
           collectionType: RealmCollectionType.list),
       SchemaProperty('characterBasedDamage', RealmPropertyType.bool),
       SchemaProperty('dice', RealmPropertyType.object,

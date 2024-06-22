@@ -96,7 +96,7 @@ class _AbilitiesTabState extends State<AbilitiesTab> {
           if (mCharacter!.abilityMode == AbilityChooseMode.manualRolled) ...[
             Center(
               child: SizedBox(
-                width: 150,
+                width: 160,
                 height: 40,
                 child: FilledButton(
                   onPressed: () => setState(() {

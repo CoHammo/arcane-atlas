@@ -29,6 +29,14 @@ enum Gender {
 
 enum FeatureTypes { descriptive, addon, action, modifier }
 
+enum DescriptorType {
+  physical('Physical'),
+  personal('Personal');
+
+  const DescriptorType(this.name);
+  final String name;
+}
+
 enum EquipmentTypes {
   armor('Armor'),
   weapon('Weapon'),

@@ -25,7 +25,7 @@ class Race extends $Race with RealmEntity, RealmObjectBase, RealmObject {
     Iterable<Race> subraces = const [],
     Iterable<Feature> traits = const [],
     Map<String, int> abilityIncrease = const {},
-    int sizeBack = 0,
+    int size = 0,
     bool isSubrace = false,
     Source? source,
   }) {
@@ -36,7 +36,7 @@ class Race extends $Race with RealmEntity, RealmObjectBase, RealmObject {
         'sizeDesc': 'No Description',
         'languagesDesc': 'No Description',
         'speed': 30,
-        'sizeBack': 0,
+        '_size': 0,
         'isSubrace': false,
       });
     }
@@ -59,7 +59,7 @@ class Race extends $Race with RealmEntity, RealmObjectBase, RealmObject {
         this, 'traits', RealmList<Feature>(traits));
     RealmObjectBase.set<RealmMap<int>>(
         this, 'abilityIncrease', RealmMap<int>(abilityIncrease));
-    RealmObjectBase.set(this, 'sizeBack', sizeBack);
+    RealmObjectBase.set(this, '_size', size);
     RealmObjectBase.set(this, 'isSubrace', isSubrace);
     RealmObjectBase.set(this, 'source', source);
   }
@@ -156,9 +156,9 @@ class Race extends $Race with RealmEntity, RealmObjectBase, RealmObject {
       throw RealmUnsupportedSetError();
 
   @override
-  int get sizeBack => RealmObjectBase.get<int>(this, 'sizeBack') as int;
+  int get _size => RealmObjectBase.get<int>(this, '_size') as int;
   @override
-  set sizeBack(int value) => RealmObjectBase.set(this, 'sizeBack', value);
+  set _size(int value) => RealmObjectBase.set(this, '_size', value);
 
   @override
   bool get isSubrace => RealmObjectBase.get<bool>(this, 'isSubrace') as bool;
@@ -210,7 +210,7 @@ class Race extends $Race with RealmEntity, RealmObjectBase, RealmObject {
       'subraces': subraces.toEJson(),
       'traits': traits.toEJson(),
       'abilityIncrease': abilityIncrease.toEJson(),
-      'sizeBack': sizeBack.toEJson(),
+      '_size': _size.toEJson(),
       'isSubrace': isSubrace.toEJson(),
       'source': source.toEJson(),
     };
@@ -234,7 +234,7 @@ class Race extends $Race with RealmEntity, RealmObjectBase, RealmObject {
         'subraces': EJsonValue subraces,
         'traits': EJsonValue traits,
         'abilityIncrease': EJsonValue abilityIncrease,
-        'sizeBack': EJsonValue sizeBack,
+        '_size': EJsonValue _size,
         'isSubrace': EJsonValue isSubrace,
         'source': EJsonValue source,
       } =>
@@ -253,7 +253,7 @@ class Race extends $Race with RealmEntity, RealmObjectBase, RealmObject {
           subraces: fromEJson(subraces),
           traits: fromEJson(traits),
           abilityIncrease: fromEJson(abilityIncrease),
-          sizeBack: fromEJson(sizeBack),
+          size: fromEJson(_size),
           isSubrace: fromEJson(isSubrace),
           source: fromEJson(source),
         ),
@@ -284,7 +284,7 @@ class Race extends $Race with RealmEntity, RealmObjectBase, RealmObject {
           linkTarget: 'Feature', collectionType: RealmCollectionType.list),
       SchemaProperty('abilityIncrease', RealmPropertyType.int,
           collectionType: RealmCollectionType.map),
-      SchemaProperty('sizeBack', RealmPropertyType.int),
+      SchemaProperty('_size', RealmPropertyType.int),
       SchemaProperty('isSubrace', RealmPropertyType.bool),
       SchemaProperty('source', RealmPropertyType.object,
           optional: true, linkTarget: 'Source'),

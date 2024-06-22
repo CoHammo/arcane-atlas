@@ -22,42 +22,40 @@ class $Creature implements IName, IImage, IGraphable {
   late $Abilities? abilities;
   late int xpWorth = 0;
   late Map<String, int> skillBonuses;
-  late int exhaustion = 0;
+  late int exhaustionLevel = 0;
   late List<String> vulnerabilities;
   late List<String> resistances;
   late List<String> immunities;
-  late List<String> conditionImmunities;
+  late List<$Condition> conditionImmunities;
   late List<String> senses;
   late bool hasTelepathy = false;
   late int telepathyRange = 0;
   int get proficiencyBonus => calcProfBonus(challengeRating.ceil());
 
-  late double challengeRatingBack = 0;
-  double get challengeRating => challengeRatingBack;
+  late double _challengeRating = 0;
+  double get challengeRating => _challengeRating;
   set challengeRating(double cr) {
-    challengeRatingBack = cr;
+    _challengeRating = cr;
     abilities?.level = cr.ceil();
   }
 
-  late List<int> movementModesBack;
+  late List<int> _movementModes = [];
   List<MovementModes> get movementModes =>
-      [for (var m in movementModesBack) MovementModes.values[m]];
+      [for (var m in _movementModes) MovementModes.values[m]];
   set movementModes(List<MovementModes> vals) =>
-      movementModesBack = [for (var m in vals) m.index];
+      _movementModes = [for (var m in vals) m.index];
 
-  late int sizeBack = 0;
-  DndSize get size => DndSize.values[sizeBack];
-  set size(DndSize val) => sizeBack = val.index;
+  late int _size = 0;
+  DndSize get size => DndSize.values[_size];
+  set size(DndSize val) => _size = val.index;
 
-  late int typeBack = 0;
-  CreatureTypes get type => CreatureTypes.values[typeBack];
-  set type(CreatureTypes val) => typeBack = val.index;
+  late int _type = 0;
+  CreatureTypes get type => CreatureTypes.values[_type];
+  set type(CreatureTypes val) => _type = val.index;
 
-  late int alignmentBack = 0;
-  DndAlignment get alignment => DndAlignment.values[alignmentBack];
-  set alignment(DndAlignment val) => alignmentBack = val.index;
-
-  late int? hp;
+  late int _alignment = 0;
+  DndAlignment get alignment => DndAlignment.values[_alignment];
+  set alignment(DndAlignment val) => _alignment = val.index;
 
   late List<$Equipment> inventory;
   late List<$Feature> features;

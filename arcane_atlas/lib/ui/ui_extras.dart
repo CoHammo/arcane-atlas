@@ -224,7 +224,9 @@ class _OptionWidgetState extends State<OptionWidget> {
       title: Text(widget.title),
       trailing: FilledButton(
         style: FilledButton.styleFrom(
-            shape: dndButtonShape, padding: EdgeInsets.zero),
+          shape: dndButtonShape,
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+        ),
         onPressed: () async {
           List<dynamic> chosen = (await showDialog<List<dynamic>>(
                 context: context,
@@ -516,7 +518,7 @@ class ItemListTile extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(item.name, style: Theme.of(context).textTheme.titleLarge),
+              Text(item.name, style: Theme.of(context).textTheme.titleMedium),
               if (subtitle != null) Text(subtitle!),
             ],
           ),

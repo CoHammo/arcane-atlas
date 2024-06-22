@@ -5,6 +5,7 @@ export 'race.dart';
 export 'spell.dart';
 export 'extras.dart';
 export 'creature.dart';
+export 'dice.dart';
 
 export 'campaign.dart';
 export 'encounter.dart';

@@ -22,20 +22,19 @@ class Creature extends $Creature
     Abilities? abilities,
     int xpWorth = 0,
     Map<String, int> skillBonuses = const {},
-    int exhaustion = 0,
+    int exhaustionLevel = 0,
     Iterable<String> vulnerabilities = const [],
     Iterable<String> resistances = const [],
     Iterable<String> immunities = const [],
-    Iterable<String> conditionImmunities = const [],
+    Iterable<Condition> conditionImmunities = const [],
     Iterable<String> senses = const [],
     bool hasTelepathy = false,
     int telepathyRange = 0,
-    double challengeRatingBack = 0,
-    Iterable<int> movementModesBack = const [],
-    int sizeBack = 0,
-    int typeBack = 0,
-    int alignmentBack = 0,
-    int? hp,
+    double challengeRating = 0,
+    Iterable<int> movementModes = const [],
+    int size = 0,
+    int type = 0,
+    int alignment = 0,
     Iterable<Equipment> inventory = const [],
     Iterable<Feature> features = const [],
     Iterable<Action> actions = const [],
@@ -52,13 +51,13 @@ class Creature extends $Creature
         'hasNaturalArmor': false,
         'speed': 30,
         'xpWorth': 0,
-        'exhaustion': 0,
+        'exhaustionLevel': 0,
         'hasTelepathy': false,
         'telepathyRange': 0,
-        'challengeRatingBack': 0,
-        'sizeBack': 0,
-        'typeBack': 0,
-        'alignmentBack': 0,
+        '_challengeRating': 0,
+        '_size': 0,
+        '_type': 0,
+        '_alignment': 0,
       });
     }
     RealmObjectBase.set(this, 'name', name);
@@ -72,26 +71,25 @@ class Creature extends $Creature
     RealmObjectBase.set(this, 'xpWorth', xpWorth);
     RealmObjectBase.set<RealmMap<int>>(
         this, 'skillBonuses', RealmMap<int>(skillBonuses));
-    RealmObjectBase.set(this, 'exhaustion', exhaustion);
+    RealmObjectBase.set(this, 'exhaustionLevel', exhaustionLevel);
     RealmObjectBase.set<RealmList<String>>(
         this, 'vulnerabilities', RealmList<String>(vulnerabilities));
     RealmObjectBase.set<RealmList<String>>(
         this, 'resistances', RealmList<String>(resistances));
     RealmObjectBase.set<RealmList<String>>(
         this, 'immunities', RealmList<String>(immunities));
-    RealmObjectBase.set<RealmList<String>>(
-        this, 'conditionImmunities', RealmList<String>(conditionImmunities));
+    RealmObjectBase.set<RealmList<Condition>>(
+        this, 'conditionImmunities', RealmList<Condition>(conditionImmunities));
     RealmObjectBase.set<RealmList<String>>(
         this, 'senses', RealmList<String>(senses));
     RealmObjectBase.set(this, 'hasTelepathy', hasTelepathy);
     RealmObjectBase.set(this, 'telepathyRange', telepathyRange);
-    RealmObjectBase.set(this, 'challengeRatingBack', challengeRatingBack);
+    RealmObjectBase.set(this, '_challengeRating', challengeRating);
     RealmObjectBase.set<RealmList<int>>(
-        this, 'movementModesBack', RealmList<int>(movementModesBack));
-    RealmObjectBase.set(this, 'sizeBack', sizeBack);
-    RealmObjectBase.set(this, 'typeBack', typeBack);
-    RealmObjectBase.set(this, 'alignmentBack', alignmentBack);
-    RealmObjectBase.set(this, 'hp', hp);
+        this, '_movementModes', RealmList<int>(movementModes));
+    RealmObjectBase.set(this, '_size', size);
+    RealmObjectBase.set(this, '_type', type);
+    RealmObjectBase.set(this, '_alignment', alignment);
     RealmObjectBase.set<RealmList<Equipment>>(
         this, 'inventory', RealmList<Equipment>(inventory));
     RealmObjectBase.set<RealmList<Feature>>(
@@ -170,9 +168,11 @@ class Creature extends $Creature
       throw RealmUnsupportedSetError();
 
   @override
-  int get exhaustion => RealmObjectBase.get<int>(this, 'exhaustion') as int;
+  int get exhaustionLevel =>
+      RealmObjectBase.get<int>(this, 'exhaustionLevel') as int;
   @override
-  set exhaustion(int value) => RealmObjectBase.set(this, 'exhaustion', value);
+  set exhaustionLevel(int value) =>
+      RealmObjectBase.set(this, 'exhaustionLevel', value);
 
   @override
   RealmList<String> get vulnerabilities =>
@@ -196,11 +196,11 @@ class Creature extends $Creature
       throw RealmUnsupportedSetError();
 
   @override
-  RealmList<String> get conditionImmunities =>
-      RealmObjectBase.get<String>(this, 'conditionImmunities')
-          as RealmList<String>;
+  RealmList<Condition> get conditionImmunities =>
+      RealmObjectBase.get<Condition>(this, 'conditionImmunities')
+          as RealmList<Condition>;
   @override
-  set conditionImmunities(covariant RealmList<String> value) =>
+  set conditionImmunities(covariant RealmList<Condition> value) =>
       throw RealmUnsupportedSetError();
 
   @override
@@ -225,40 +225,33 @@ class Creature extends $Creature
       RealmObjectBase.set(this, 'telepathyRange', value);
 
   @override
-  double get challengeRatingBack =>
-      RealmObjectBase.get<double>(this, 'challengeRatingBack') as double;
+  double get _challengeRating =>
+      RealmObjectBase.get<double>(this, '_challengeRating') as double;
   @override
-  set challengeRatingBack(double value) =>
-      RealmObjectBase.set(this, 'challengeRatingBack', value);
+  set _challengeRating(double value) =>
+      RealmObjectBase.set(this, '_challengeRating', value);
 
   @override
-  RealmList<int> get movementModesBack =>
-      RealmObjectBase.get<int>(this, 'movementModesBack') as RealmList<int>;
+  RealmList<int> get _movementModes =>
+      RealmObjectBase.get<int>(this, '_movementModes') as RealmList<int>;
   @override
-  set movementModesBack(covariant RealmList<int> value) =>
+  set _movementModes(covariant RealmList<int> value) =>
       throw RealmUnsupportedSetError();
 
   @override
-  int get sizeBack => RealmObjectBase.get<int>(this, 'sizeBack') as int;
+  int get _size => RealmObjectBase.get<int>(this, '_size') as int;
   @override
-  set sizeBack(int value) => RealmObjectBase.set(this, 'sizeBack', value);
+  set _size(int value) => RealmObjectBase.set(this, '_size', value);
 
   @override
-  int get typeBack => RealmObjectBase.get<int>(this, 'typeBack') as int;
+  int get _type => RealmObjectBase.get<int>(this, '_type') as int;
   @override
-  set typeBack(int value) => RealmObjectBase.set(this, 'typeBack', value);
+  set _type(int value) => RealmObjectBase.set(this, '_type', value);
 
   @override
-  int get alignmentBack =>
-      RealmObjectBase.get<int>(this, 'alignmentBack') as int;
+  int get _alignment => RealmObjectBase.get<int>(this, '_alignment') as int;
   @override
-  set alignmentBack(int value) =>
-      RealmObjectBase.set(this, 'alignmentBack', value);
-
-  @override
-  int? get hp => RealmObjectBase.get<int>(this, 'hp') as int?;
-  @override
-  set hp(int? value) => RealmObjectBase.set(this, 'hp', value);
+  set _alignment(int value) => RealmObjectBase.set(this, '_alignment', value);
 
   @override
   RealmList<Equipment> get inventory =>
@@ -339,7 +332,7 @@ class Creature extends $Creature
       'abilities': abilities.toEJson(),
       'xpWorth': xpWorth.toEJson(),
       'skillBonuses': skillBonuses.toEJson(),
-      'exhaustion': exhaustion.toEJson(),
+      'exhaustionLevel': exhaustionLevel.toEJson(),
       'vulnerabilities': vulnerabilities.toEJson(),
       'resistances': resistances.toEJson(),
       'immunities': immunities.toEJson(),
@@ -347,12 +340,11 @@ class Creature extends $Creature
       'senses': senses.toEJson(),
       'hasTelepathy': hasTelepathy.toEJson(),
       'telepathyRange': telepathyRange.toEJson(),
-      'challengeRatingBack': challengeRatingBack.toEJson(),
-      'movementModesBack': movementModesBack.toEJson(),
-      'sizeBack': sizeBack.toEJson(),
-      'typeBack': typeBack.toEJson(),
-      'alignmentBack': alignmentBack.toEJson(),
-      'hp': hp.toEJson(),
+      '_challengeRating': _challengeRating.toEJson(),
+      '_movementModes': _movementModes.toEJson(),
+      '_size': _size.toEJson(),
+      '_type': _type.toEJson(),
+      '_alignment': _alignment.toEJson(),
       'inventory': inventory.toEJson(),
       'features': features.toEJson(),
       'actions': actions.toEJson(),
@@ -378,7 +370,7 @@ class Creature extends $Creature
         'abilities': EJsonValue abilities,
         'xpWorth': EJsonValue xpWorth,
         'skillBonuses': EJsonValue skillBonuses,
-        'exhaustion': EJsonValue exhaustion,
+        'exhaustionLevel': EJsonValue exhaustionLevel,
         'vulnerabilities': EJsonValue vulnerabilities,
         'resistances': EJsonValue resistances,
         'immunities': EJsonValue immunities,
@@ -386,12 +378,11 @@ class Creature extends $Creature
         'senses': EJsonValue senses,
         'hasTelepathy': EJsonValue hasTelepathy,
         'telepathyRange': EJsonValue telepathyRange,
-        'challengeRatingBack': EJsonValue challengeRatingBack,
-        'movementModesBack': EJsonValue movementModesBack,
-        'sizeBack': EJsonValue sizeBack,
-        'typeBack': EJsonValue typeBack,
-        'alignmentBack': EJsonValue alignmentBack,
-        'hp': EJsonValue hp,
+        '_challengeRating': EJsonValue _challengeRating,
+        '_movementModes': EJsonValue _movementModes,
+        '_size': EJsonValue _size,
+        '_type': EJsonValue _type,
+        '_alignment': EJsonValue _alignment,
         'inventory': EJsonValue inventory,
         'features': EJsonValue features,
         'actions': EJsonValue actions,
@@ -412,7 +403,7 @@ class Creature extends $Creature
           abilities: fromEJson(abilities),
           xpWorth: fromEJson(xpWorth),
           skillBonuses: fromEJson(skillBonuses),
-          exhaustion: fromEJson(exhaustion),
+          exhaustionLevel: fromEJson(exhaustionLevel),
           vulnerabilities: fromEJson(vulnerabilities),
           resistances: fromEJson(resistances),
           immunities: fromEJson(immunities),
@@ -420,12 +411,11 @@ class Creature extends $Creature
           senses: fromEJson(senses),
           hasTelepathy: fromEJson(hasTelepathy),
           telepathyRange: fromEJson(telepathyRange),
-          challengeRatingBack: fromEJson(challengeRatingBack),
-          movementModesBack: fromEJson(movementModesBack),
-          sizeBack: fromEJson(sizeBack),
-          typeBack: fromEJson(typeBack),
-          alignmentBack: fromEJson(alignmentBack),
-          hp: fromEJson(hp),
+          challengeRating: fromEJson(_challengeRating),
+          movementModes: fromEJson(_movementModes),
+          size: fromEJson(_size),
+          type: fromEJson(_type),
+          alignment: fromEJson(_alignment),
           inventory: fromEJson(inventory),
           features: fromEJson(features),
           actions: fromEJson(actions),
@@ -456,26 +446,25 @@ class Creature extends $Creature
       SchemaProperty('xpWorth', RealmPropertyType.int),
       SchemaProperty('skillBonuses', RealmPropertyType.int,
           collectionType: RealmCollectionType.map),
-      SchemaProperty('exhaustion', RealmPropertyType.int),
+      SchemaProperty('exhaustionLevel', RealmPropertyType.int),
       SchemaProperty('vulnerabilities', RealmPropertyType.string,
           collectionType: RealmCollectionType.list),
       SchemaProperty('resistances', RealmPropertyType.string,
           collectionType: RealmCollectionType.list),
       SchemaProperty('immunities', RealmPropertyType.string,
           collectionType: RealmCollectionType.list),
-      SchemaProperty('conditionImmunities', RealmPropertyType.string,
-          collectionType: RealmCollectionType.list),
+      SchemaProperty('conditionImmunities', RealmPropertyType.object,
+          linkTarget: 'Condition', collectionType: RealmCollectionType.list),
       SchemaProperty('senses', RealmPropertyType.string,
           collectionType: RealmCollectionType.list),
       SchemaProperty('hasTelepathy', RealmPropertyType.bool),
       SchemaProperty('telepathyRange', RealmPropertyType.int),
-      SchemaProperty('challengeRatingBack', RealmPropertyType.double),
-      SchemaProperty('movementModesBack', RealmPropertyType.int,
+      SchemaProperty('_challengeRating', RealmPropertyType.double),
+      SchemaProperty('_movementModes', RealmPropertyType.int,
           collectionType: RealmCollectionType.list),
-      SchemaProperty('sizeBack', RealmPropertyType.int),
-      SchemaProperty('typeBack', RealmPropertyType.int),
-      SchemaProperty('alignmentBack', RealmPropertyType.int),
-      SchemaProperty('hp', RealmPropertyType.int, optional: true),
+      SchemaProperty('_size', RealmPropertyType.int),
+      SchemaProperty('_type', RealmPropertyType.int),
+      SchemaProperty('_alignment', RealmPropertyType.int),
       SchemaProperty('inventory', RealmPropertyType.object,
           linkTarget: 'Equipment', collectionType: RealmCollectionType.list),
       SchemaProperty('features', RealmPropertyType.object,

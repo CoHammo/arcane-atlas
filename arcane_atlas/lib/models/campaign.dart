@@ -36,9 +36,9 @@ class $CampaignCharacter implements IName, IGraphable {
   int get proficiencyBonus => calcProfBonus(level);
   int get speed => race?.speed ?? 30;
 
-  late int sizeBack = 0;
-  DndSize get size => DndSize.values[sizeBack];
-  set size(DndSize val) => sizeBack = val.index;
+  late int _size = 0;
+  DndSize get size => DndSize.values[_size];
+  set size(DndSize val) => _size = val.index;
 
   late int strength = 8;
   late int dexterity = 8;

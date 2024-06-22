@@ -76,7 +76,7 @@ class Create {
   static Character character() {
     return Character(
       ObjectId(),
-      'Character',
+      name: 'Character',
       image: characterImage,
       abilities: $Abilities.create(),
       coins: Coins(),
@@ -86,7 +86,7 @@ class Create {
         'Encumberence': false,
         'Coin Weight': false,
       },
-      descriptors: $Descriptor.createMain(),
+      descriptors: $Descriptor.createDefault(),
       spellSlots: [for (int i = 0; i < 9; i++) RealmValue.from([])],
     );
   }
@@ -94,17 +94,22 @@ class Create {
   static List<RealmObject> content() {
     var srd = Source('Systems Reference Document');
 
-    /// ==============================
-    /// Equipment Subtypes
-    /// ==============================
-    var subtype = EquipmentSubtype('Holy Symbol');
-    var musicalInstrument = EquipmentSubtype('Musical Instrument');
-
     /// ========================================
     ///
     /// Equipment Section
     ///
     /// ========================================
+
+    /// ==============================
+    /// Equipment Subtypes
+    /// ==============================
+
+    var holySymbol = EquipmentSubtype('Holy Symbol');
+    var musicalInstrument = EquipmentSubtype('Musical Instrument');
+
+    /// ==============================
+    /// Equipment Items
+    /// ==============================
 
     var lute = $Equipment.create(
       name: 'Lute',
@@ -134,20 +139,20 @@ class Create {
     var amulet = $Equipment.create(
       name: 'Amulet',
       type: EquipmentTypes.adventuringGear,
-      subtype: subtype,
+      subtype: holySymbol,
       cost: Coins(gold: 5),
       weight: 1,
     );
     var emblem = $Equipment.create(
       name: 'Emblem',
       type: EquipmentTypes.adventuringGear,
-      subtype: subtype,
+      subtype: holySymbol,
       cost: Coins(gold: 5),
     );
     var reliquary = $Equipment.create(
       name: 'Reliquary',
       type: EquipmentTypes.adventuringGear,
-      subtype: subtype,
+      subtype: holySymbol,
       cost: Coins(gold: 5),
       weight: 2,
     );
@@ -236,9 +241,12 @@ class Create {
     var featherFall = Spell('Feather Fall', level: 1);
     var hideousLaughter = Spell('Hideous Laughter', level: 1);
 
-    /// ================================
+    /// =========================================
+    ///
     /// Languages
-    /// ================================
+    ///
+    /// =========================================
+
     var common = Language('Common');
     var elvish = Language('Elvish');
     var draconic = Language('Draconic');
@@ -246,6 +254,28 @@ class Create {
     var celestial = Language('Celestial');
     var orcish = Language('Orcish');
     var allLanguages = [common, elvish, draconic, entish, celestial, orcish];
+
+    /// ========================================
+    ///
+    /// Conditions
+    ///
+    /// ========================================
+
+    var blinded = Condition('Blinded');
+    var charmed = Condition('Charmed');
+    var deafened = Condition('Deafened');
+    var frightened = Condition('Frightened');
+    var grappled = Condition('Grappled');
+    var incapacitated = Condition('Incapacitated');
+    var invisible = Condition('Invisible');
+    var paralyzed = Condition('Paralyzed');
+    var petrified = Condition('Petrified');
+    var poisoned = Condition('Poisoned');
+    var prone = Condition('Prone');
+    var restrained = Condition('Restrained');
+    var stunnded = Condition('Stunned');
+    var unconsious = Condition('Unconscious');
+    var exhaustion = Condition('Exhaustion');
 
     /// ========================================
     ///
@@ -268,37 +298,37 @@ class Create {
           'Elves love freedom, variety, and self expression, so they lean strongly towards the gentler aspects of chaos. They value and protect others\' freedom as well as their own, and they are more often good than not.',
       sizeDesc:
           'Elves range from under 5 to over 6 feet tall and have slender builds. Your size is Medium.',
-      sizeBack: DndSize.medium.index,
+      size: DndSize.medium.index,
       speed: 30,
       traits: [
         Feature(
           'Darkvision',
           desc:
               'Accustomed to twilit forests and the night sky, you have superior vision in dark and dim conditions. You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can\'t discern color in darkness, only shades of gray.',
-          typeBack: FeatureTypes.descriptive.index,
+          type: FeatureTypes.descriptive.index,
         ),
         Feature(
           'Keen Senses',
           desc: 'You have proficiency in the Perception skill.',
-          typeBack: FeatureTypes.addon.index,
+          type: FeatureTypes.addon.index,
           option: Option(
             isChoice: false,
             isProficiency: true,
             skills: ['Perception'],
-            typeBack: OptionTypes.skill.index,
+            type: OptionTypes.skill.index,
           ),
         ),
         Feature(
           'Fey Ancestry',
           desc:
               'You have advantage on saving throws against being charmed, and magic can\'t put you to sleep.',
-          typeBack: FeatureTypes.descriptive.index,
+          type: FeatureTypes.descriptive.index,
         ),
         Feature(
           'Trance',
           desc:
               'Elves don\'t need to sleep. Instead, they meditate deeply, remaining semiconscious, for 4 hours a day. (The Common word for such meditation is “trance.”) While meditating, you can dream after a fashion; such dreams are actually mental exercises that have become reflexive through years of practice. After resting in this way, you gain the same benefit that a human does from 8 hours of sleep.',
-          typeBack: FeatureTypes.descriptive.index,
+          type: FeatureTypes.descriptive.index,
         ),
       ],
       languagesDesc:
@@ -322,11 +352,11 @@ class Create {
         'Elf Weapon Training',
         desc:
             'You have proficiency with the longsword, shortsword, shortbow, and longbow',
-        typeBack: FeatureTypes.addon.index,
+        type: FeatureTypes.addon.index,
         option: Option(
           isChoice: false,
           isProficiency: true,
-          typeBack: OptionTypes.equipment.index,
+          type: OptionTypes.equipment.index,
           equipment: [longsword, shortsword, shortbow, longbow],
         ),
       ),
@@ -334,27 +364,27 @@ class Create {
         'Cantrip',
         desc:
             'You know one cantrip of your choice from the wizard spell list. Intelligence is your spellcasting ability for it.',
-        typeBack: FeatureTypes.addon.index,
+        type: FeatureTypes.addon.index,
         option: Option(
           desc: 'Choose a Spell',
           selections: 1,
           isChoice: true,
           isQuery: true,
           query: 'classes.name == "Wizard"',
-          typeBack: OptionTypes.spell.index,
+          type: OptionTypes.spell.index,
         ),
       ),
       Feature(
         'Extra Language',
         desc:
             'You can speak, read, and write one extra language of your choice',
-        typeBack: FeatureTypes.addon.index,
+        type: FeatureTypes.addon.index,
         option: Option(
           isChoice: true,
           isQuery: true,
           selections: 1,
           desc: 'Choose a Language',
-          typeBack: OptionTypes.language.index,
+          type: OptionTypes.language.index,
         ),
       ),
     ]);
@@ -388,16 +418,16 @@ class Create {
         selections: 3,
         desc: 'Three musical instruments of your choice',
         query: 'subtype.name == "Musical Instrument"',
-        typeBack: OptionTypes.equipment.index,
+        type: OptionTypes.equipment.index,
       ),
-      savingThrowsBack: [AbilityScores.dex.index, AbilityScores.cha.index],
+      savingThrows: [AbilityScores.dex.index, AbilityScores.cha.index],
       skillProfs: Option(
         isChoice: true,
         isProficiency: true,
         selections: 3,
         desc: 'Choose any three skills',
         skills: skillsList(),
-        typeBack: OptionTypes.skill.index,
+        type: OptionTypes.skill.index,
       ),
       rolledGold: DiceRoller(
         numDice: 5,
@@ -410,14 +440,14 @@ class Create {
           isChoice: true,
           selections: 1,
           desc: '(a) a rapier, (b) a longsword, or (c) any simple weapon',
-          typeBack: OptionTypes.equipment.index,
+          type: OptionTypes.equipment.index,
           equipment: [rapier, longsword],
         ),
         Option(
           isChoice: true,
           selections: 1,
           desc: '(a) a diplomat\'s pack or (b) an entertainer\'s pack',
-          typeBack: OptionTypes.equipment.index,
+          type: OptionTypes.equipment.index,
           equipment: [diplomatPack, entertainerPack],
         ),
         Option(
@@ -425,13 +455,13 @@ class Create {
           isQuery: true,
           selections: 1,
           desc: '(a) a lute or (b) any other musical instrument',
-          typeBack: OptionTypes.equipment.index,
+          type: OptionTypes.equipment.index,
           query: 'subtype.name == "Musical Instrument"',
         ),
         Option(
           isChoice: false,
           desc: 'Leather armor and a dagger',
-          typeBack: OptionTypes.equipment.index,
+          type: OptionTypes.equipment.index,
           equipment: [leatherArmor, dagger],
         ),
       ],
@@ -452,7 +482,7 @@ class Create {
         },
         isRitualCaster: true,
         canUseFocus: true,
-        focusTypeBack: EquipmentTypes.tool.index,
+        focusType: EquipmentTypes.tool.index,
         focusSubtype: 'Musical Instrument',
         spellAbilityDesc:
             'Charisma is your spellcasting ability for your bard spells. Your magic comes from the heart and soul you pour into the performance of your music or oration. You use your Charisma whenever a spell refers to your spellcasting ability. In addition, you use your Charisma modifier when setting the saving throw DC for a bard spell you cast and when making an attack roll with one.',
@@ -471,7 +501,7 @@ class Create {
         isQuery: true,
         selections: 2,
         query: 'classes.name == "Bard" && level == 0',
-        typeBack: OptionTypes.spell.index,
+        type: OptionTypes.spell.index,
       ),
       spellsAtLevel1: Option(
         desc: 'Choose Bard spells',
@@ -479,14 +509,14 @@ class Create {
         isQuery: true,
         selections: 2,
         query: 'classes.name == "Bard" && level == 1',
-        typeBack: OptionTypes.spell.index,
+        type: OptionTypes.spell.index,
       ),
       features: [
         Feature(
           'Bardic Inspiration',
           desc:
               'You can inspire others through stirring words or music. To do so, you use a bonus action on your turn to choose one creature other than yourself within 60 feet of you who can hear you. That creature gains one Bardic Inspiration die, a d6.\nOnce within the next 10 minutes, the creature can roll the die and add the number rolled to one ability check, attack roll, or saving throw it makes. The creature can wait until after it rolls the d20 before deciding to use the Bardic Inspiration die, but must decide before the DM says whether the roll succeeds or fails. Once the Bardic Inspiration die is rolled, it is lost. A creature can have only one Bardic Inspiration die at a time.\nYou can use this feature a number of times equal to your Charisma modifier (a minimum of once). You regain any expended uses when you finish a long rest.\nYour Bardic Inspiration die changes when you reach certain levels in this class. The die becomes a d8 at 5th level, a d10 at 10th level, and a d12 at 15th level.',
-          typeBack: FeatureTypes.descriptive.index,
+          type: FeatureTypes.descriptive.index,
         ),
       ],
       subclassType: 'Bard Colleges',
@@ -502,27 +532,27 @@ class Create {
               'Bonus Proficiencies',
               desc:
                   'When you join the College of Lore at 3rd level, you gain proficiency with three skills of your choice.',
-              typeBack: FeatureTypes.addon.index,
+              type: FeatureTypes.addon.index,
               option: Option(
                 desc: 'Three skills of your choice',
                 selections: 3,
                 isChoice: true,
                 isProficiency: true,
                 skills: skillsList(),
-                typeBack: OptionTypes.skill.index,
+                type: OptionTypes.skill.index,
               ),
             ),
             Feature(
               'Additional Magic Secrets',
               desc:
                   'Also at 3rd level, you learn how to use your wit to distract, confuse, and otherwise sap the confidence and competence of others. When a creature that you can see within 60 feet of you makes an attack roll, an ability check, or a damage roll, you can use your reaction to expend one of your uses of Bardic Inspiration, rolling a Bardic Inspiration die and subtracting the number rolled from the creature\'s roll. You can choose to use this feature after the creature makes its roll, but before the DM determines whether the attack roll or ability check succeeds or fails, or before the creature deals its damage. The creature is immune if it can\'t hear you or if it\'s immune to being charmed.',
-              typeBack: FeatureTypes.descriptive.index,
+              type: FeatureTypes.descriptive.index,
             ),
           ],
         ),
       ],
       table: DndTable()
-        ..all = [
+        ..table = [
           ['Cantrips', 'Spells Known', 1, 2, 3, 4, 5, 6, 7, 8, 9],
           [2, 4, 2],
           [2, 5, 3],
@@ -567,7 +597,7 @@ class Create {
         selections: 2,
         isChoice: true,
         isQuery: true,
-        typeBack: OptionTypes.language.index,
+        type: OptionTypes.language.index,
       ),
       startingEquipment: [
         Option(
@@ -580,19 +610,19 @@ class Create {
           desc: 'a prayer book or prayer wheel',
           isChoice: true,
           selections: 1,
-          typeBack: OptionTypes.equipment.index,
+          type: OptionTypes.equipment.index,
           equipment: [prayerBook, prayerWheel],
         ),
         Option(
           desc: '5 sticks of incense, vestments, a set of common clothes',
           isChoice: false,
-          typeBack: OptionTypes.equipment.index,
+          type: OptionTypes.equipment.index,
           equipment: [commonClothes, incenseSticks, vestments],
         ),
         Option(
           desc: 'a pouch containing 15 gp',
           isChoice: false,
-          typeBack: OptionTypes.coins.index,
+          type: OptionTypes.coins.index,
           coins: Coins(gold: 15),
         ),
       ],
@@ -601,14 +631,14 @@ class Create {
           'Shelter of the Faithful',
           desc:
               'As an acolyte, you command the respect of those who share your faith, and you can perform the religious ceremonies of your deity. You and your adventuring companions can expect to receive free healing and care at a temple, shrine, or other established presence of your faith, though you must provide any material components needed for spells. Those who share your religion will support you (but only you) at a modest lifestyle.\n\nYou might also have ties to a specific temple dedicated to your chosen deity or pantheon, and you have a residence there. This could be the temple where you used to serve, if you remain on good terms with it, or a temple where you have found a new home. While near your temple, you can call upon the priests for assistance, provided the assistance you ask for is not hazardous and you remain in good standing with your temple.',
-          typeBack: FeatureTypes.descriptive.index,
+          type: FeatureTypes.descriptive.index,
         )
       ],
       characteristicsDesc:
           'Acolytes are shaped by their experience in temples or other religious communities. Their study of the history and tenets of their faith and their relationships to temples, shrines, or hierarchies affect their mannerisms and ideals. Their flaws might be some hidden hypocrisy or heretical idea, or an ideal or bond taken to an extreme.',
       suggestedCharacteristics: [
         CharacteristicList(
-          'Personality Trait',
+          name: 'Personality Trait',
           diceBack: Dice.d8.index,
           values: [
             'I idolize a particular hero of my faith, and constantly refer to that person\'s deeds and example.',
@@ -622,7 +652,7 @@ class Create {
           ],
         ),
         CharacteristicList(
-          'Ideal',
+          name: 'Ideal',
           diceBack: Dice.d6.index,
           values: [
             'Tradition. The ancient traditions of worship and sacrifice must be preserved and upheld. (Lawful)',
@@ -634,7 +664,7 @@ class Create {
           ],
         ),
         CharacteristicList(
-          'Bond',
+          name: 'Bond',
           diceBack: Dice.d6.index,
           values: [
             'I would die to recover an ancient relic of my faith that was lost long ago',
@@ -646,7 +676,7 @@ class Create {
           ],
         ),
         CharacteristicList(
-          'Flaw',
+          name: 'Flaw',
           diceBack: Dice.d6.index,
           values: [
             'I judge others harshly, and myself even more severely.',
@@ -676,7 +706,7 @@ class Create {
           isChoice: true,
           isQuery: true,
           isProficiency: true,
-          typeBack: OptionTypes.equipment.index,
+          type: OptionTypes.equipment.index,
           query: 'subtype.name == "Artisan\'s Tools"',
         ),
         Option(
@@ -685,7 +715,7 @@ class Create {
           isProficiency: true,
           isQuery: true,
           query: 'type == OptionTypes.vehicle',
-          typeBack: OptionTypes.equipment.index,
+          type: OptionTypes.equipment.index,
         ),
       ],
       startingEquipment: [
@@ -695,12 +725,12 @@ class Create {
           isChoice: true,
           isQuery: true,
           query: 'subtype.name == "Artisan\'s Tools"',
-          typeBack: OptionTypes.equipment.index,
+          type: OptionTypes.equipment.index,
         ),
         Option(
           desc: 'a shovel, an iron pot, a set of common clothes',
           isChoice: false,
-          typeBack: OptionTypes.equipment.index,
+          type: OptionTypes.equipment.index,
           equipment: [
             shovel,
             ironPot,
@@ -710,12 +740,12 @@ class Create {
         Option(
           desc: 'a pouch containing 10 gp',
           isChoice: false,
-          typeBack: OptionTypes.coins.index,
+          type: OptionTypes.coins.index,
           coins: Coins(gold: 10),
         ),
       ],
       specialty: CharacteristicList(
-        'Defining Event',
+        name: 'Defining Event',
         desc:
             'You previously pursued a simple profession among the peasantry, perhaps as a farmer, miner, servant, shepherd, woodcutter, or gravedigger. But something happened that set you on a different path and marked you for greater things. Choose or randomly determine a defining event that marked you as a hero of the people.',
         diceBack: Dice.d10.index,
@@ -743,7 +773,7 @@ class Create {
           'A folk hero is one of the common people, for better or for worse. Most folk heroes look on their humble origins as a virtue, not a shortcoming, and their home communities remain very important to them.',
       suggestedCharacteristics: [
         CharacteristicList(
-          'Personality Trait',
+          name: 'Personality Trait',
           diceBack: Dice.d8.index,
           values: [
             'I judge people by their actions, not their words.',
@@ -757,7 +787,7 @@ class Create {
           ],
         ),
         CharacteristicList(
-          'Ideal',
+          name: 'Ideal',
           diceBack: Dice.d6.index,
           values: [
             'Respect. People deserve to be treated with dignity and respect. (Good)',
@@ -840,11 +870,10 @@ class Create {
     /// ==================================
     var skeleton = Creature(
       'Skeleton',
-      sizeBack: DndSize.medium.index,
-      alignmentBack: DndAlignment.lEvil.index,
+      size: DndSize.medium.index,
+      alignment: DndAlignment.lEvil.index,
       armorClass: 13,
       hasNaturalArmor: true,
-      hp: 13,
       hitDice: DiceRoller(numDice: 2, dieIndex: Dice.d8.index, modifier: 4),
       speed: 30,
       abilities: $Abilities.create()
@@ -856,10 +885,10 @@ class Create {
         ..charisma!.baseScore = 5,
       vulnerabilities: [DamageTypes.bludgeoning.name],
       immunities: [DamageTypes.poison.name],
-      conditionImmunities: ['exhaustion', 'poisoned'],
+      conditionImmunities: [exhaustion, poisoned],
       senses: ['darkvision 60 ft.', 'passive Perception 9'],
       languages: allLanguages,
-      challengeRatingBack: 0.25,
+      challengeRating: 0.25,
       xpWorth: 50,
       actions: [
         Action(
@@ -871,7 +900,7 @@ class Create {
           hitDice: [
             DiceRoller(numDice: 1, dieIndex: Dice.d6.index, modifier: 2)
           ],
-          damageTypeBack: [DamageTypes.piercing.index],
+          damageType: [DamageTypes.piercing.index],
         ),
         Action(
           name: 'Shortbow',
@@ -882,7 +911,7 @@ class Create {
           hitDice: [
             DiceRoller(numDice: 1, dieIndex: Dice.d6.index, modifier: 2)
           ],
-          damageTypeBack: [DamageTypes.piercing.index],
+          damageType: [DamageTypes.piercing.index],
         ),
       ],
     );
@@ -892,11 +921,10 @@ class Create {
     /// ==================================
     var gelatinousCube = Creature(
       'Gelatinous Cube',
-      sizeBack: DndSize.large.index,
-      typeBack: CreatureTypes.ooze.index,
-      alignmentBack: DndAlignment.neutral.index,
+      size: DndSize.large.index,
+      type: CreatureTypes.ooze.index,
+      alignment: DndAlignment.neutral.index,
       armorClass: 6,
-      hp: 84,
       hitDice: DiceRoller(numDice: 8, dieIndex: Dice.d10.index, modifier: 40),
       speed: 15,
       abilities: $Abilities.create()
@@ -907,18 +935,18 @@ class Create {
         ..wisdom!.baseScore = 6
         ..charisma!.baseScore = 5,
       conditionImmunities: [
-        'blinded',
-        'charmed',
-        'deafened',
-        'exhaustion',
-        'frightened',
-        'prone',
+        blinded,
+        charmed,
+        deafened,
+        exhaustion,
+        frightened,
+        prone,
       ],
       senses: [
         'blindsight 60 ft. (blind beyond this radius)',
         'passive Perception 8',
       ],
-      challengeRatingBack: 2,
+      challengeRating: 2,
       xpWorth: 450,
       features: [
         Feature(
@@ -940,16 +968,16 @@ class Create {
           reach: '5 ft.',
           numTargets: 1,
           hitDice: [DiceRoller(numDice: 3, dieIndex: Dice.d6.index)],
-          damageTypeBack: [DamageTypes.acid.index],
+          damageType: [DamageTypes.acid.index],
         ),
         Action(
           name: 'Engulf',
           description:
               'The cube moves up to its speed. While doing so, it can enter Large or smaller creature\' spaces. Whenever the cube enters a creature\'s space, the creature must make a DC 12 Dexterity saving throw. One a successful save, the creature can choose to be pushed 5 feet back or to the side of the cube. A creature that chooses not to be pushed suffers te consequences of a failed saving throw. On a failed save, the cube enters the creature\'s space, and the creature takes 10 (3d6) acid damage and is engulfed. The engulfed creature can\'t breathe, is restrained, and takes 21 (6d6) acid damage at the start of each of the cube\'s turns. When the cube moves, the engulfed creature moves with it. An engulfed creature can try to escape by taking an action to make a DC 12 Strength check. On a success, the creature escapes and enters a space of its choice within 5 feet of the cube.',
           hasSaveThrow: true,
-          saveThrowAbilityBack: AbilityScores.dex.index,
+          saveThrowAbilities: AbilityScores.dex.index,
           hitDice: [DiceRoller(numDice: 3, dieIndex: Dice.d6.index)],
-          damageTypeBack: [DamageTypes.acid.index],
+          damageType: [DamageTypes.acid.index],
         ),
       ],
     );
@@ -959,12 +987,11 @@ class Create {
     /// ==================================
     var orc = Creature(
       'Orc',
-      sizeBack: DndSize.medium.index,
-      typeBack: CreatureTypes.humanoid.index,
-      alignmentBack: DndAlignment.cEvil.index,
+      size: DndSize.medium.index,
+      type: CreatureTypes.humanoid.index,
+      alignment: DndAlignment.cEvil.index,
       armorClass: 13,
       hasNaturalArmor: true,
-      hp: 15,
       hitDice: DiceRoller(numDice: 2, dieIndex: Dice.d8.index, modifier: 6),
       speed: 30,
       abilities: $Abilities.create()
@@ -977,7 +1004,7 @@ class Create {
       skillBonuses: {'Intimidation': 2},
       senses: ['darkvision 60 ft.', 'passive Perception 10'],
       languages: [common, orcish],
-      challengeRatingBack: 0.5,
+      challengeRating: 0.5,
       xpWorth: 100,
       features: [
         Feature(
@@ -996,7 +1023,7 @@ class Create {
           hitDice: [
             DiceRoller(numDice: 1, dieIndex: Dice.d12.index, modifier: 3)
           ],
-          damageTypeBack: [DamageTypes.slashing.index],
+          damageType: [DamageTypes.slashing.index],
         ),
         Action(
           name: 'Javelin',
@@ -1007,7 +1034,7 @@ class Create {
           hitDice: [
             DiceRoller(numDice: 1, dieIndex: Dice.d6.index, modifier: 3)
           ],
-          damageTypeBack: [DamageTypes.piercing.index],
+          damageType: [DamageTypes.piercing.index],
         ),
       ],
     );
@@ -1017,12 +1044,11 @@ class Create {
     /// ==================================
     var mimic = Creature(
       'Mimic',
-      sizeBack: DndSize.medium.index,
-      typeBack: CreatureTypes.monstrosity.index,
-      alignmentBack: DndAlignment.neutral.index,
+      size: DndSize.medium.index,
+      type: CreatureTypes.monstrosity.index,
+      alignment: DndAlignment.neutral.index,
       armorClass: 12,
       hasNaturalArmor: true,
-      hp: 58,
       hitDice: DiceRoller(numDice: 9, dieIndex: Dice.d8.index, modifier: 18),
       speed: 15,
       abilities: $Abilities.create()
@@ -1034,9 +1060,9 @@ class Create {
         ..charisma!.baseScore = 8,
       skillBonuses: {'Stealth': 5},
       immunities: ['acid'],
-      conditionImmunities: ['prone'],
+      conditionImmunities: [prone],
       senses: ['darkvision 60 ft.', 'passive Perception 11'],
-      challengeRatingBack: 2,
+      challengeRating: 2,
       xpWorth: 450,
       features: [
         Feature(
@@ -1071,7 +1097,7 @@ class Create {
           hitDice: [
             DiceRoller(numDice: 1, dieIndex: Dice.d8.index, modifier: 3)
           ],
-          damageTypeBack: [DamageTypes.bludgeoning.index],
+          damageType: [DamageTypes.bludgeoning.index],
         ),
         Action(
           name: 'Bite',
@@ -1082,7 +1108,7 @@ class Create {
             DiceRoller(numDice: 1, dieIndex: Dice.d8.index, modifier: 3),
             DiceRoller(numDice: 1, dieIndex: Dice.d8.index)
           ],
-          damageTypeBack: [DamageTypes.piercing.index, DamageTypes.acid.index],
+          damageType: [DamageTypes.piercing.index, DamageTypes.acid.index],
         )
       ],
     );
@@ -1149,7 +1175,7 @@ class MockCharacter implements IName {
     'Encumbrance': false,
     'Coin Weight': false,
   };
-  final List<Descriptor> descriptors = $Descriptor.createMain();
+  final List<Descriptor> descriptors = $Descriptor.createDefault();
 
   final Map<Type, Map<Option, List>> allOptions = {
     Equipment: {},

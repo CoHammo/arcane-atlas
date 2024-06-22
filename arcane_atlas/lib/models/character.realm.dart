@@ -12,25 +12,25 @@ class Character extends $Character
   static var _defaultsSet = false;
 
   Character(
-    ObjectId id,
-    String name, {
+    ObjectId id, {
+    String name = 'Character',
     Uint8List? image,
     Map<String, bool> prefs = const {},
     Iterable<Source> allowedSources = const [],
     Iterable<Descriptor> descriptors = const [],
-    int genderBack = 0,
+    int gender = 0,
     Race? race,
     Background? background,
     Class? dndClass,
     bool? multiclass = false,
     Iterable<Class> multiclasses = const [],
-    int levelBack = 1,
+    int level = 1,
     int hitPoints = 1,
     int armorClass = 0,
     int? passivePerception,
     Iterable<String> proficiencies = const [],
     int xp = 0,
-    int alignmentBack = 0,
+    int alignment = 0,
     int inspiration = 0,
     int exhaustion = 0,
     bool encumbered = false,
@@ -48,13 +48,14 @@ class Character extends $Character
   }) {
     if (!_defaultsSet) {
       _defaultsSet = RealmObjectBase.setDefaults<Character>({
-        'genderBack': 0,
+        'name': 'Character',
+        '_gender': 0,
         'multiclass': false,
-        'levelBack': 1,
+        '_level': 1,
         'hitPoints': 1,
         'armorClass': 0,
         'xp': 0,
-        'alignmentBack': 0,
+        '_alignment': 0,
         'inspiration': 0,
         'exhaustion': 0,
         'encumbered': false,
@@ -68,21 +69,21 @@ class Character extends $Character
         this, 'allowedSources', RealmList<Source>(allowedSources));
     RealmObjectBase.set<RealmList<Descriptor>>(
         this, 'descriptors', RealmList<Descriptor>(descriptors));
-    RealmObjectBase.set(this, 'genderBack', genderBack);
+    RealmObjectBase.set(this, '_gender', gender);
     RealmObjectBase.set(this, 'race', race);
     RealmObjectBase.set(this, 'background', background);
     RealmObjectBase.set(this, 'dndClass', dndClass);
     RealmObjectBase.set(this, 'multiclass', multiclass);
     RealmObjectBase.set<RealmList<Class>>(
         this, 'multiclasses', RealmList<Class>(multiclasses));
-    RealmObjectBase.set(this, 'levelBack', levelBack);
+    RealmObjectBase.set(this, '_level', level);
     RealmObjectBase.set(this, 'hitPoints', hitPoints);
     RealmObjectBase.set(this, 'armorClass', armorClass);
     RealmObjectBase.set(this, 'passivePerception', passivePerception);
     RealmObjectBase.set<RealmList<String>>(
         this, 'proficiencies', RealmList<String>(proficiencies));
     RealmObjectBase.set(this, 'xp', xp);
-    RealmObjectBase.set(this, 'alignmentBack', alignmentBack);
+    RealmObjectBase.set(this, '_alignment', alignment);
     RealmObjectBase.set(this, 'inspiration', inspiration);
     RealmObjectBase.set(this, 'exhaustion', exhaustion);
     RealmObjectBase.set(this, 'encumbered', encumbered);
@@ -148,9 +149,9 @@ class Character extends $Character
       throw RealmUnsupportedSetError();
 
   @override
-  int get genderBack => RealmObjectBase.get<int>(this, 'genderBack') as int;
+  int get _gender => RealmObjectBase.get<int>(this, '_gender') as int;
   @override
-  set genderBack(int value) => RealmObjectBase.set(this, 'genderBack', value);
+  set _gender(int value) => RealmObjectBase.set(this, '_gender', value);
 
   @override
   Race? get race => RealmObjectBase.get<Race>(this, 'race') as Race?;
@@ -184,9 +185,9 @@ class Character extends $Character
       throw RealmUnsupportedSetError();
 
   @override
-  int get levelBack => RealmObjectBase.get<int>(this, 'levelBack') as int;
+  int get _level => RealmObjectBase.get<int>(this, '_level') as int;
   @override
-  set levelBack(int value) => RealmObjectBase.set(this, 'levelBack', value);
+  set _level(int value) => RealmObjectBase.set(this, '_level', value);
 
   @override
   int get hitPoints => RealmObjectBase.get<int>(this, 'hitPoints') as int;
@@ -218,11 +219,9 @@ class Character extends $Character
   set xp(int value) => RealmObjectBase.set(this, 'xp', value);
 
   @override
-  int get alignmentBack =>
-      RealmObjectBase.get<int>(this, 'alignmentBack') as int;
+  int get _alignment => RealmObjectBase.get<int>(this, '_alignment') as int;
   @override
-  set alignmentBack(int value) =>
-      RealmObjectBase.set(this, 'alignmentBack', value);
+  set _alignment(int value) => RealmObjectBase.set(this, '_alignment', value);
 
   @override
   int get inspiration => RealmObjectBase.get<int>(this, 'inspiration') as int;
@@ -336,19 +335,19 @@ class Character extends $Character
       'prefs': prefs.toEJson(),
       'allowedSources': allowedSources.toEJson(),
       'descriptors': descriptors.toEJson(),
-      'genderBack': genderBack.toEJson(),
+      '_gender': _gender.toEJson(),
       'race': race.toEJson(),
       'background': background.toEJson(),
       'dndClass': dndClass.toEJson(),
       'multiclass': multiclass.toEJson(),
       'multiclasses': multiclasses.toEJson(),
-      'levelBack': levelBack.toEJson(),
+      '_level': _level.toEJson(),
       'hitPoints': hitPoints.toEJson(),
       'armorClass': armorClass.toEJson(),
       'passivePerception': passivePerception.toEJson(),
       'proficiencies': proficiencies.toEJson(),
       'xp': xp.toEJson(),
-      'alignmentBack': alignmentBack.toEJson(),
+      '_alignment': _alignment.toEJson(),
       'inspiration': inspiration.toEJson(),
       'exhaustion': exhaustion.toEJson(),
       'encumbered': encumbered.toEJson(),
@@ -376,19 +375,19 @@ class Character extends $Character
         'prefs': EJsonValue prefs,
         'allowedSources': EJsonValue allowedSources,
         'descriptors': EJsonValue descriptors,
-        'genderBack': EJsonValue genderBack,
+        '_gender': EJsonValue _gender,
         'race': EJsonValue race,
         'background': EJsonValue background,
         'dndClass': EJsonValue dndClass,
         'multiclass': EJsonValue multiclass,
         'multiclasses': EJsonValue multiclasses,
-        'levelBack': EJsonValue levelBack,
+        '_level': EJsonValue _level,
         'hitPoints': EJsonValue hitPoints,
         'armorClass': EJsonValue armorClass,
         'passivePerception': EJsonValue passivePerception,
         'proficiencies': EJsonValue proficiencies,
         'xp': EJsonValue xp,
-        'alignmentBack': EJsonValue alignmentBack,
+        '_alignment': EJsonValue _alignment,
         'inspiration': EJsonValue inspiration,
         'exhaustion': EJsonValue exhaustion,
         'encumbered': EJsonValue encumbered,
@@ -406,24 +405,24 @@ class Character extends $Character
       } =>
         Character(
           fromEJson(id),
-          fromEJson(name),
+          name: fromEJson(name),
           image: fromEJson(image),
           prefs: fromEJson(prefs),
           allowedSources: fromEJson(allowedSources),
           descriptors: fromEJson(descriptors),
-          genderBack: fromEJson(genderBack),
+          gender: fromEJson(_gender),
           race: fromEJson(race),
           background: fromEJson(background),
           dndClass: fromEJson(dndClass),
           multiclass: fromEJson(multiclass),
           multiclasses: fromEJson(multiclasses),
-          levelBack: fromEJson(levelBack),
+          level: fromEJson(_level),
           hitPoints: fromEJson(hitPoints),
           armorClass: fromEJson(armorClass),
           passivePerception: fromEJson(passivePerception),
           proficiencies: fromEJson(proficiencies),
           xp: fromEJson(xp),
-          alignmentBack: fromEJson(alignmentBack),
+          alignment: fromEJson(_alignment),
           inspiration: fromEJson(inspiration),
           exhaustion: fromEJson(exhaustion),
           encumbered: fromEJson(encumbered),
@@ -457,7 +456,7 @@ class Character extends $Character
           linkTarget: 'Source', collectionType: RealmCollectionType.list),
       SchemaProperty('descriptors', RealmPropertyType.object,
           linkTarget: 'Descriptor', collectionType: RealmCollectionType.list),
-      SchemaProperty('genderBack', RealmPropertyType.int),
+      SchemaProperty('_gender', RealmPropertyType.int),
       SchemaProperty('race', RealmPropertyType.object,
           optional: true, linkTarget: 'Race'),
       SchemaProperty('background', RealmPropertyType.object,
@@ -467,7 +466,7 @@ class Character extends $Character
       SchemaProperty('multiclass', RealmPropertyType.bool, optional: true),
       SchemaProperty('multiclasses', RealmPropertyType.object,
           linkTarget: 'Class', collectionType: RealmCollectionType.list),
-      SchemaProperty('levelBack', RealmPropertyType.int),
+      SchemaProperty('_level', RealmPropertyType.int),
       SchemaProperty('hitPoints', RealmPropertyType.int),
       SchemaProperty('armorClass', RealmPropertyType.int),
       SchemaProperty('passivePerception', RealmPropertyType.int,
@@ -475,7 +474,7 @@ class Character extends $Character
       SchemaProperty('proficiencies', RealmPropertyType.string,
           collectionType: RealmCollectionType.list),
       SchemaProperty('xp', RealmPropertyType.int),
-      SchemaProperty('alignmentBack', RealmPropertyType.int),
+      SchemaProperty('_alignment', RealmPropertyType.int),
       SchemaProperty('inspiration', RealmPropertyType.int),
       SchemaProperty('exhaustion', RealmPropertyType.int),
       SchemaProperty('encumbered', RealmPropertyType.bool),
@@ -512,14 +511,14 @@ class Descriptor extends $Descriptor
     with RealmEntity, RealmObjectBase, EmbeddedObject {
   Descriptor(
     String name,
-    String type,
     bool isInt,
     String value,
+    int _type,
   ) {
     RealmObjectBase.set(this, 'name', name);
-    RealmObjectBase.set(this, 'type', type);
     RealmObjectBase.set(this, 'isInt', isInt);
     RealmObjectBase.set(this, 'value', value);
+    RealmObjectBase.set(this, '_type', _type);
   }
 
   Descriptor._();
@@ -530,11 +529,6 @@ class Descriptor extends $Descriptor
   set name(String value) => RealmObjectBase.set(this, 'name', value);
 
   @override
-  String get type => RealmObjectBase.get<String>(this, 'type') as String;
-  @override
-  set type(String value) => RealmObjectBase.set(this, 'type', value);
-
-  @override
   bool get isInt => RealmObjectBase.get<bool>(this, 'isInt') as bool;
   @override
   set isInt(bool value) => RealmObjectBase.set(this, 'isInt', value);
@@ -543,6 +537,11 @@ class Descriptor extends $Descriptor
   String get value => RealmObjectBase.get<String>(this, 'value') as String;
   @override
   set value(String value) => RealmObjectBase.set(this, 'value', value);
+
+  @override
+  int get _type => RealmObjectBase.get<int>(this, '_type') as int;
+  @override
+  set _type(int value) => RealmObjectBase.set(this, '_type', value);
 
   @override
   Stream<RealmObjectChanges<Descriptor>> get changes =>
@@ -558,9 +557,9 @@ class Descriptor extends $Descriptor
   EJsonValue toEJson() {
     return <String, dynamic>{
       'name': name.toEJson(),
-      'type': type.toEJson(),
       'isInt': isInt.toEJson(),
       'value': value.toEJson(),
+      '_type': _type.toEJson(),
     };
   }
 
@@ -569,15 +568,15 @@ class Descriptor extends $Descriptor
     return switch (ejson) {
       {
         'name': EJsonValue name,
-        'type': EJsonValue type,
         'isInt': EJsonValue isInt,
         'value': EJsonValue value,
+        '_type': EJsonValue _type,
       } =>
         Descriptor(
           fromEJson(name),
-          fromEJson(type),
           fromEJson(isInt),
           fromEJson(value),
+          fromEJson(_type),
         ),
       _ => raiseInvalidEJson(ejson),
     };
@@ -588,9 +587,9 @@ class Descriptor extends $Descriptor
     register(_toEJson, _fromEJson);
     return SchemaObject(ObjectType.embeddedObject, Descriptor, 'Descriptor', [
       SchemaProperty('name', RealmPropertyType.string),
-      SchemaProperty('type', RealmPropertyType.string),
       SchemaProperty('isInt', RealmPropertyType.bool),
       SchemaProperty('value', RealmPropertyType.string),
+      SchemaProperty('_type', RealmPropertyType.int),
     ]);
   }();
 
@@ -813,14 +812,15 @@ class CharacteristicList extends $CharacteristicList
     with RealmEntity, RealmObjectBase, EmbeddedObject {
   static var _defaultsSet = false;
 
-  CharacteristicList(
-    String name, {
+  CharacteristicList({
     Iterable<String> values = const [],
+    String name = 'Characteristics',
     String desc = '',
     int diceBack = 0,
   }) {
     if (!_defaultsSet) {
       _defaultsSet = RealmObjectBase.setDefaults<CharacteristicList>({
+        'name': 'Characteristics',
         'desc': '',
         'diceBack': 0,
       });
@@ -888,8 +888,8 @@ class CharacteristicList extends $CharacteristicList
         'diceBack': EJsonValue diceBack,
       } =>
         CharacteristicList(
-          fromEJson(name),
           values: fromEJson(values),
+          name: fromEJson(name),
           desc: fromEJson(desc),
           diceBack: fromEJson(diceBack),
         ),

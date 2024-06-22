@@ -18,7 +18,7 @@ class _EquipmentTabState extends State<EquipmentTab> {
 
   @override
   Widget build(BuildContext build) {
-    query = realm.query<Equipment>('typeBack IN \$0', [equipmentTypes]);
+    query = realm.query<Equipment>('_type IN \$0', [equipmentTypes]);
     if (mCharacter!.dndClass == null || mCharacter!.background == null) {
       return const Text(
           'You must choose a class and background before choosing equipment');

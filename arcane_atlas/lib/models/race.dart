@@ -31,9 +31,9 @@ class $Race implements IName, IImage {
   late List<$Feature> traits;
   late Map<String, int> abilityIncrease;
 
-  late int sizeBack = 0;
-  DndSize get size => DndSize.values[sizeBack];
-  set size(DndSize val) => sizeBack = val.index;
+  late int _size = 0;
+  DndSize get size => DndSize.values[_size];
+  set size(DndSize val) => _size = val.index;
 
   @Backlink(#subraces)
   late Iterable<$Race> superrace;
@@ -61,7 +61,7 @@ class $Race implements IName, IImage {
       languages: List.from(languages),
       traits: List.from(traits),
       abilityIncrease: Map.of(abilityIncrease),
-      sizeBack: sizeBack,
+      size: _size,
       isSubrace: true,
       source: source as Source,
     );

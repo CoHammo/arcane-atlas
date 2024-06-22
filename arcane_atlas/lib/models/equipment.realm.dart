@@ -14,7 +14,7 @@ class Equipment extends $Equipment
   Equipment(
     String name,
     String desc,
-    int typeBack,
+    int _type,
     int weight, {
     Uint8List? image,
     Rarity? rarity,
@@ -24,7 +24,7 @@ class Equipment extends $Equipment
     int? abilityModMax,
     int? strengthScore,
     bool? stealthDisadvantage,
-    int? acAbilityModBack,
+    int? acAbilityMod,
     Damage? damage,
     Iterable<String> properties = const [],
     bool isContainer = false,
@@ -34,14 +34,14 @@ class Equipment extends $Equipment
     String? speedUnit,
     int? mountCapacity,
     String? beast,
-    int? sizeBack = 0,
+    int? size = 0,
     bool needsAttunement = false,
     Source? source,
   }) {
     if (!_defaultsSet) {
       _defaultsSet = RealmObjectBase.setDefaults<Equipment>({
         'isContainer': false,
-        'sizeBack': 0,
+        '_size': 0,
         'needsAttunement': false,
       });
     }
@@ -49,7 +49,7 @@ class Equipment extends $Equipment
     RealmObjectBase.set(this, 'image', image);
     RealmObjectBase.set(this, 'desc', desc);
     RealmObjectBase.set(this, 'rarity', rarity);
-    RealmObjectBase.set(this, 'typeBack', typeBack);
+    RealmObjectBase.set(this, '_type', _type);
     RealmObjectBase.set(this, 'subtype', subtype);
     RealmObjectBase.set(this, 'cost', cost);
     RealmObjectBase.set(this, 'weight', weight);
@@ -57,7 +57,7 @@ class Equipment extends $Equipment
     RealmObjectBase.set(this, 'abilityModMax', abilityModMax);
     RealmObjectBase.set(this, 'strengthScore', strengthScore);
     RealmObjectBase.set(this, 'stealthDisadvantage', stealthDisadvantage);
-    RealmObjectBase.set(this, 'acAbilityModBack', acAbilityModBack);
+    RealmObjectBase.set(this, '_acAbilityMod', acAbilityMod);
     RealmObjectBase.set(this, 'damage', damage);
     RealmObjectBase.set<RealmList<String>>(
         this, 'properties', RealmList<String>(properties));
@@ -69,7 +69,7 @@ class Equipment extends $Equipment
     RealmObjectBase.set(this, 'speedUnit', speedUnit);
     RealmObjectBase.set(this, 'mountCapacity', mountCapacity);
     RealmObjectBase.set(this, 'beast', beast);
-    RealmObjectBase.set(this, 'sizeBack', sizeBack);
+    RealmObjectBase.set(this, '_size', size);
     RealmObjectBase.set(this, 'needsAttunement', needsAttunement);
     RealmObjectBase.set(this, 'source', source);
   }
@@ -99,9 +99,9 @@ class Equipment extends $Equipment
       RealmObjectBase.set(this, 'rarity', value);
 
   @override
-  int get typeBack => RealmObjectBase.get<int>(this, 'typeBack') as int;
+  int get _type => RealmObjectBase.get<int>(this, '_type') as int;
   @override
-  set typeBack(int value) => RealmObjectBase.set(this, 'typeBack', value);
+  set _type(int value) => RealmObjectBase.set(this, '_type', value);
 
   @override
   EquipmentSubtype? get subtype =>
@@ -148,11 +148,11 @@ class Equipment extends $Equipment
       RealmObjectBase.set(this, 'stealthDisadvantage', value);
 
   @override
-  int? get acAbilityModBack =>
-      RealmObjectBase.get<int>(this, 'acAbilityModBack') as int?;
+  int? get _acAbilityMod =>
+      RealmObjectBase.get<int>(this, '_acAbilityMod') as int?;
   @override
-  set acAbilityModBack(int? value) =>
-      RealmObjectBase.set(this, 'acAbilityModBack', value);
+  set _acAbilityMod(int? value) =>
+      RealmObjectBase.set(this, '_acAbilityMod', value);
 
   @override
   Damage? get damage => RealmObjectBase.get<Damage>(this, 'damage') as Damage?;
@@ -213,9 +213,9 @@ class Equipment extends $Equipment
   set beast(String? value) => RealmObjectBase.set(this, 'beast', value);
 
   @override
-  int? get sizeBack => RealmObjectBase.get<int>(this, 'sizeBack') as int?;
+  int? get _size => RealmObjectBase.get<int>(this, '_size') as int?;
   @override
-  set sizeBack(int? value) => RealmObjectBase.set(this, 'sizeBack', value);
+  set _size(int? value) => RealmObjectBase.set(this, '_size', value);
 
   @override
   bool get needsAttunement =>
@@ -247,7 +247,7 @@ class Equipment extends $Equipment
       'image': image.toEJson(),
       'desc': desc.toEJson(),
       'rarity': rarity.toEJson(),
-      'typeBack': typeBack.toEJson(),
+      '_type': _type.toEJson(),
       'subtype': subtype.toEJson(),
       'cost': cost.toEJson(),
       'weight': weight.toEJson(),
@@ -255,7 +255,7 @@ class Equipment extends $Equipment
       'abilityModMax': abilityModMax.toEJson(),
       'strengthScore': strengthScore.toEJson(),
       'stealthDisadvantage': stealthDisadvantage.toEJson(),
-      'acAbilityModBack': acAbilityModBack.toEJson(),
+      '_acAbilityMod': _acAbilityMod.toEJson(),
       'damage': damage.toEJson(),
       'properties': properties.toEJson(),
       'isContainer': isContainer.toEJson(),
@@ -265,7 +265,7 @@ class Equipment extends $Equipment
       'speedUnit': speedUnit.toEJson(),
       'mountCapacity': mountCapacity.toEJson(),
       'beast': beast.toEJson(),
-      'sizeBack': sizeBack.toEJson(),
+      '_size': _size.toEJson(),
       'needsAttunement': needsAttunement.toEJson(),
       'source': source.toEJson(),
     };
@@ -279,7 +279,7 @@ class Equipment extends $Equipment
         'image': EJsonValue image,
         'desc': EJsonValue desc,
         'rarity': EJsonValue rarity,
-        'typeBack': EJsonValue typeBack,
+        '_type': EJsonValue _type,
         'subtype': EJsonValue subtype,
         'cost': EJsonValue cost,
         'weight': EJsonValue weight,
@@ -287,7 +287,7 @@ class Equipment extends $Equipment
         'abilityModMax': EJsonValue abilityModMax,
         'strengthScore': EJsonValue strengthScore,
         'stealthDisadvantage': EJsonValue stealthDisadvantage,
-        'acAbilityModBack': EJsonValue acAbilityModBack,
+        '_acAbilityMod': EJsonValue _acAbilityMod,
         'damage': EJsonValue damage,
         'properties': EJsonValue properties,
         'isContainer': EJsonValue isContainer,
@@ -297,14 +297,14 @@ class Equipment extends $Equipment
         'speedUnit': EJsonValue speedUnit,
         'mountCapacity': EJsonValue mountCapacity,
         'beast': EJsonValue beast,
-        'sizeBack': EJsonValue sizeBack,
+        '_size': EJsonValue _size,
         'needsAttunement': EJsonValue needsAttunement,
         'source': EJsonValue source,
       } =>
         Equipment(
           fromEJson(name),
           fromEJson(desc),
-          fromEJson(typeBack),
+          fromEJson(_type),
           fromEJson(weight),
           image: fromEJson(image),
           rarity: fromEJson(rarity),
@@ -314,7 +314,7 @@ class Equipment extends $Equipment
           abilityModMax: fromEJson(abilityModMax),
           strengthScore: fromEJson(strengthScore),
           stealthDisadvantage: fromEJson(stealthDisadvantage),
-          acAbilityModBack: fromEJson(acAbilityModBack),
+          acAbilityMod: fromEJson(_acAbilityMod),
           damage: fromEJson(damage),
           properties: fromEJson(properties),
           isContainer: fromEJson(isContainer),
@@ -324,7 +324,7 @@ class Equipment extends $Equipment
           speedUnit: fromEJson(speedUnit),
           mountCapacity: fromEJson(mountCapacity),
           beast: fromEJson(beast),
-          sizeBack: fromEJson(sizeBack),
+          size: fromEJson(_size),
           needsAttunement: fromEJson(needsAttunement),
           source: fromEJson(source),
         ),
@@ -341,7 +341,7 @@ class Equipment extends $Equipment
       SchemaProperty('desc', RealmPropertyType.string),
       SchemaProperty('rarity', RealmPropertyType.object,
           optional: true, linkTarget: 'Rarity'),
-      SchemaProperty('typeBack', RealmPropertyType.int),
+      SchemaProperty('_type', RealmPropertyType.int),
       SchemaProperty('subtype', RealmPropertyType.object,
           optional: true, linkTarget: 'EquipmentSubtype'),
       SchemaProperty('cost', RealmPropertyType.object,
@@ -352,7 +352,7 @@ class Equipment extends $Equipment
       SchemaProperty('strengthScore', RealmPropertyType.int, optional: true),
       SchemaProperty('stealthDisadvantage', RealmPropertyType.bool,
           optional: true),
-      SchemaProperty('acAbilityModBack', RealmPropertyType.int, optional: true),
+      SchemaProperty('_acAbilityMod', RealmPropertyType.int, optional: true),
       SchemaProperty('damage', RealmPropertyType.object,
           optional: true, linkTarget: 'Damage'),
       SchemaProperty('properties', RealmPropertyType.string,
@@ -366,7 +366,7 @@ class Equipment extends $Equipment
       SchemaProperty('speedUnit', RealmPropertyType.string, optional: true),
       SchemaProperty('mountCapacity', RealmPropertyType.int, optional: true),
       SchemaProperty('beast', RealmPropertyType.string, optional: true),
-      SchemaProperty('sizeBack', RealmPropertyType.int, optional: true),
+      SchemaProperty('_size', RealmPropertyType.int, optional: true),
       SchemaProperty('needsAttunement', RealmPropertyType.bool),
       SchemaProperty('source', RealmPropertyType.object,
           optional: true, linkTarget: 'Source'),

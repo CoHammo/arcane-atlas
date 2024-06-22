@@ -48,7 +48,7 @@ class _RaceTabState extends State<RaceTab> with AutomaticKeepAliveClientMixin {
                   children: [
                     Text(
                       '${allowedRaces[index].name} (${allowedRaces[index].subraces.length} Subraces)',
-                      style: Theme.of(context).textTheme.titleLarge,
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
                     Text(allowedRaces[index].abilityIncreaseString()),
                   ],

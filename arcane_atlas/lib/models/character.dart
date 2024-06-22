@@ -17,7 +17,7 @@ class $Character implements IName, IImage {
 
   @override
   @Indexed()
-  late String name;
+  late String name = 'Character';
 
   @override
   late Uint8List? image;
@@ -32,9 +32,9 @@ class $Character implements IName, IImage {
   // flaws, faith, lifestyle, notes
   late List<$Descriptor> descriptors;
 
-  late int genderBack = 0;
-  Gender get gender => Gender.values[genderBack];
-  set gender(Gender val) => genderBack = val.index;
+  late int _gender = 0;
+  Gender get gender => Gender.values[_gender];
+  set gender(Gender val) => _gender = val.index;
 
   late $Race? race;
 
@@ -45,11 +45,11 @@ class $Character implements IName, IImage {
   late $Class? dndClass;
   late bool? multiclass = false;
   late List<$Class> multiclasses;
-  late int levelBack = 1;
-  int get level => levelBack;
+  late int _level = 1;
+  int get level => _level;
   set level(int lev) {
     abilities?.level = lev;
-    level = lev;
+    _level = lev;
   }
 
   late int hitPoints = 1;
@@ -61,9 +61,9 @@ class $Character implements IName, IImage {
   late List<String> proficiencies;
   late int xp = 0;
 
-  late int alignmentBack = 0;
-  DndAlignment get alignment => DndAlignment.values[alignmentBack];
-  set alignment(DndAlignment val) => alignmentBack = val.index;
+  late int _alignment = 0;
+  DndAlignment get alignment => DndAlignment.values[_alignment];
+  set alignment(DndAlignment val) => _alignment = val.index;
 
   // Conditions
   late int inspiration = 0;
@@ -123,12 +123,12 @@ class $Character implements IName, IImage {
 
     return Character(
       ObjectId(),
-      c.name,
+      name: c.name,
       image: c.image,
       prefs: c.prefs,
       allowedSources: c.allowedSources.value,
       descriptors: c.descriptors,
-      genderBack: c.gender.index,
+      gender: c.gender.index,
       race: c.race,
       dndClass: c.dndClass,
       multiclass: c.multiclass,
@@ -136,7 +136,7 @@ class $Character implements IName, IImage {
           c.dndClass!.hitDice!.range + c.abilities.constitution!.modifier,
       armorClass: 10 + c.abilities.dexterity!.modifier,
       proficiencies: profs,
-      alignmentBack: c.alignment.index,
+      alignment: c.alignment.index,
       abilities: c.abilities,
       spellSlots: slots,
       spells: spells,
@@ -158,25 +158,29 @@ class $Character implements IName, IImage {
 @RealmModel(ObjectType.embeddedObject)
 class $Descriptor {
   late String name;
-  late String type;
   late bool isInt;
   late String value;
 
-  static List<Descriptor> createMain() {
+  late int _type;
+  DescriptorType get type => DescriptorType.values[_type];
+  set type(DescriptorType val) => _type = val.index;
+
+  static List<Descriptor> createDefault() {
     return [
-      Descriptor('Eye Color', 'Physical', false, ''),
-      Descriptor('Skin Color', 'Physical', false, ''),
-      Descriptor('Hair Color', 'Physical', false, ''),
-      Descriptor('Height', 'Physical', false, ''),
-      Descriptor('Weight (pounds)', 'Physical', true, ''),
-      Descriptor('Age (years)', 'Physical', true, ''),
-      Descriptor('Personality Traits', 'Personal', false, ''),
-      Descriptor('Ideals', 'Personal', false, ''),
-      Descriptor('Bonds', 'Personal', false, ''),
-      Descriptor('Flaws', 'Personal', false, ''),
-      Descriptor('Faith', 'Personal', false, ''),
-      Descriptor('Lifestyle', 'Personal', false, ''),
-      Descriptor('Extra Notes', 'Personal', false, ''),
+      Descriptor('Eye Color', false, '', DescriptorType.physical.index),
+      Descriptor('Skin Color', false, '', DescriptorType.physical.index),
+      Descriptor('Hair Color', false, '', DescriptorType.physical.index),
+      Descriptor('Height', false, '', DescriptorType.physical.index),
+      Descriptor('Weight (pounds)', true, '', DescriptorType.physical.index),
+      Descriptor('Age (years)', true, '', DescriptorType.physical.index),
+      Descriptor(
+          'Personality Traits', false, '', DescriptorType.personal.index),
+      Descriptor('Ideals', false, '', DescriptorType.personal.index),
+      Descriptor('Bonds', false, '', DescriptorType.personal.index),
+      Descriptor('Flaws', false, '', DescriptorType.personal.index),
+      Descriptor('Faith', false, '', DescriptorType.personal.index),
+      Descriptor('Lifestyle', false, '', DescriptorType.personal.index),
+      Descriptor('Extra Notes', false, '', DescriptorType.personal.index),
     ];
   }
 }
@@ -205,7 +209,7 @@ class $Background implements IName {
 @RealmModel(ObjectType.embeddedObject)
 class $CharacteristicList {
   late List<String> values;
-  late String name;
+  late String name = 'Characteristics';
   late String desc = '';
   late int diceBack = 0;
 

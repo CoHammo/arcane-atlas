@@ -30,13 +30,12 @@ class $Class implements IName, IImage {
   late List<String> weaponProfs;
   late $Option? toolProfs;
   late $Option? skillProfs;
-  late List<int> savingThrowsBack; // enum
 
-  // savingThrowsBack getter/setter
+  late List<int> _savingThrows;
   List<AbilityScores> get savingThrows =>
-      [for (var i in savingThrowsBack) AbilityScores.values[i]];
+      [for (var i in _savingThrows) AbilityScores.values[i]];
   set savingThrows(List<AbilityScores> values) =>
-      savingThrowsBack.addAll([for (var abs in values) abs.index]);
+      _savingThrows = [for (var abs in values) abs.index];
 
   // Starting Equipment
   late List<$Option> startingEquipment;
@@ -76,7 +75,7 @@ class $Class implements IName, IImage {
 class $Subclass implements IName {
   @override
   @PrimaryKey()
-  late String name = 'None';
+  late String name;
 
   late $Class? superclass;
   late String desc = 'No Description';

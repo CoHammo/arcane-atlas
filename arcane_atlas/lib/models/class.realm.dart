@@ -19,7 +19,7 @@ class Class extends $Class with RealmEntity, RealmObjectBase, RealmObject {
     Iterable<String> weaponProfs = const [],
     Option? toolProfs,
     Option? skillProfs,
-    Iterable<int> savingThrowsBack = const [],
+    Iterable<int> savingThrows = const [],
     Iterable<Option> startingEquipment = const [],
     DiceRoller? rolledGold,
     Spellcaster? spellcaster,
@@ -53,7 +53,7 @@ class Class extends $Class with RealmEntity, RealmObjectBase, RealmObject {
     RealmObjectBase.set(this, 'toolProfs', toolProfs);
     RealmObjectBase.set(this, 'skillProfs', skillProfs);
     RealmObjectBase.set<RealmList<int>>(
-        this, 'savingThrowsBack', RealmList<int>(savingThrowsBack));
+        this, '_savingThrows', RealmList<int>(savingThrows));
     RealmObjectBase.set<RealmList<Option>>(
         this, 'startingEquipment', RealmList<Option>(startingEquipment));
     RealmObjectBase.set(this, 'rolledGold', rolledGold);
@@ -129,10 +129,10 @@ class Class extends $Class with RealmEntity, RealmObjectBase, RealmObject {
       RealmObjectBase.set(this, 'skillProfs', value);
 
   @override
-  RealmList<int> get savingThrowsBack =>
-      RealmObjectBase.get<int>(this, 'savingThrowsBack') as RealmList<int>;
+  RealmList<int> get _savingThrows =>
+      RealmObjectBase.get<int>(this, '_savingThrows') as RealmList<int>;
   @override
-  set savingThrowsBack(covariant RealmList<int> value) =>
+  set _savingThrows(covariant RealmList<int> value) =>
       throw RealmUnsupportedSetError();
 
   @override
@@ -247,7 +247,7 @@ class Class extends $Class with RealmEntity, RealmObjectBase, RealmObject {
       'weaponProfs': weaponProfs.toEJson(),
       'toolProfs': toolProfs.toEJson(),
       'skillProfs': skillProfs.toEJson(),
-      'savingThrowsBack': savingThrowsBack.toEJson(),
+      '_savingThrows': _savingThrows.toEJson(),
       'startingEquipment': startingEquipment.toEJson(),
       'rolledGold': rolledGold.toEJson(),
       'spellcaster': spellcaster.toEJson(),
@@ -276,7 +276,7 @@ class Class extends $Class with RealmEntity, RealmObjectBase, RealmObject {
         'weaponProfs': EJsonValue weaponProfs,
         'toolProfs': EJsonValue toolProfs,
         'skillProfs': EJsonValue skillProfs,
-        'savingThrowsBack': EJsonValue savingThrowsBack,
+        '_savingThrows': EJsonValue _savingThrows,
         'startingEquipment': EJsonValue startingEquipment,
         'rolledGold': EJsonValue rolledGold,
         'spellcaster': EJsonValue spellcaster,
@@ -300,7 +300,7 @@ class Class extends $Class with RealmEntity, RealmObjectBase, RealmObject {
           weaponProfs: fromEJson(weaponProfs),
           toolProfs: fromEJson(toolProfs),
           skillProfs: fromEJson(skillProfs),
-          savingThrowsBack: fromEJson(savingThrowsBack),
+          savingThrows: fromEJson(_savingThrows),
           startingEquipment: fromEJson(startingEquipment),
           rolledGold: fromEJson(rolledGold),
           spellcaster: fromEJson(spellcaster),
@@ -337,7 +337,7 @@ class Class extends $Class with RealmEntity, RealmObjectBase, RealmObject {
           optional: true, linkTarget: 'Option'),
       SchemaProperty('skillProfs', RealmPropertyType.object,
           optional: true, linkTarget: 'Option'),
-      SchemaProperty('savingThrowsBack', RealmPropertyType.int,
+      SchemaProperty('_savingThrows', RealmPropertyType.int,
           collectionType: RealmCollectionType.list),
       SchemaProperty('startingEquipment', RealmPropertyType.object,
           linkTarget: 'Option', collectionType: RealmCollectionType.list),
@@ -382,7 +382,6 @@ class Subclass extends $Subclass
   }) {
     if (!_defaultsSet) {
       _defaultsSet = RealmObjectBase.setDefaults<Subclass>({
-        'name': 'None',
         'desc': 'No Description',
       });
     }

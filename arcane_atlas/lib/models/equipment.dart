@@ -21,9 +21,9 @@ class $Equipment implements IName, IImage {
   late String desc;
   late $Rarity? rarity;
 
-  late int typeBack;
-  EquipmentTypes get type => EquipmentTypes.values[typeBack];
-  set type(EquipmentTypes val) => typeBack = val.index;
+  late int _type;
+  EquipmentTypes get type => EquipmentTypes.values[_type];
+  set type(EquipmentTypes val) => _type = val.index;
 
   late $EquipmentSubtype? subtype;
 
@@ -36,10 +36,10 @@ class $Equipment implements IName, IImage {
   late int? strengthScore;
   late bool? stealthDisadvantage;
 
-  late int? acAbilityModBack;
+  late int? _acAbilityMod;
   AbilityScores? get acAbilityMod =>
-      acAbilityModBack == null ? null : AbilityScores.values[acAbilityModBack!];
-  set acAbilityMod(AbilityScores? val) => acAbilityModBack = val?.index;
+      _acAbilityMod == null ? null : AbilityScores.values[_acAbilityMod!];
+  set acAbilityMod(AbilityScores? val) => _acAbilityMod = val?.index;
 
   // Weapons
   late $Damage? damage;
@@ -56,9 +56,9 @@ class $Equipment implements IName, IImage {
   late int? mountCapacity;
   late String? beast; // reimplement when beasts are done
 
-  late int? sizeBack = 0;
-  DndSize? get size => sizeBack == null ? null : DndSize.values[sizeBack!];
-  set size(DndSize? val) => sizeBack = val?.index;
+  late int? _size = 0;
+  DndSize? get size => _size == null ? null : DndSize.values[_size!];
+  set size(DndSize? val) => _size = val?.index;
 
   // Magic Items
   late bool needsAttunement = false;
@@ -66,7 +66,7 @@ class $Equipment implements IName, IImage {
   late $Source? source;
 
   static Equipment create({
-    String name = 'Empty',
+    required String name,
     required EquipmentTypes type,
     EquipmentSubtype? subtype,
     Uint8List? image,
@@ -103,7 +103,7 @@ class $Equipment implements IName, IImage {
       abilityModMax: abilityModMax,
       strengthScore: strengthScore,
       stealthDisadvantage: stealthDisadvantage,
-      acAbilityModBack: acAbilityMod?.index,
+      acAbilityMod: acAbilityMod?.index,
       damage: damage,
       properties: properties,
       isContainer: isContainer,
@@ -113,7 +113,7 @@ class $Equipment implements IName, IImage {
       speedUnit: speedUnit,
       mountCapacity: mountCapacity,
       beast: beast,
-      sizeBack: size?.index,
+      size: size?.index,
       source: source,
     );
   }
@@ -212,7 +212,6 @@ class $Coins {
     return coins.isNotEmpty ? coins : '0 coins';
   }
 }
-
 
 // =================================
 // End Equipment Models

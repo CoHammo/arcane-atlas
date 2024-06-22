@@ -23,7 +23,7 @@ class Option extends $Option with RealmEntity, RealmObjectBase, EmbeddedObject {
     Iterable<String> skills = const [],
     Coins? coins,
     String? query,
-    int typeBack = 0,
+    int type = 0,
   }) {
     if (!_defaultsSet) {
       _defaultsSet = RealmObjectBase.setDefaults<Option>({
@@ -32,7 +32,7 @@ class Option extends $Option with RealmEntity, RealmObjectBase, EmbeddedObject {
         'isChoice': true,
         'isQuery': false,
         'isProficiency': false,
-        'typeBack': 0,
+        '_type': 0,
       });
     }
     RealmObjectBase.set(this, 'desc', desc);
@@ -52,7 +52,7 @@ class Option extends $Option with RealmEntity, RealmObjectBase, EmbeddedObject {
         this, 'skills', RealmList<String>(skills));
     RealmObjectBase.set(this, 'coins', coins);
     RealmObjectBase.set(this, 'query', query);
-    RealmObjectBase.set(this, 'typeBack', typeBack);
+    RealmObjectBase.set(this, '_type', type);
   }
 
   Option._();
@@ -131,9 +131,9 @@ class Option extends $Option with RealmEntity, RealmObjectBase, EmbeddedObject {
   set query(String? value) => RealmObjectBase.set(this, 'query', value);
 
   @override
-  int get typeBack => RealmObjectBase.get<int>(this, 'typeBack') as int;
+  int get _type => RealmObjectBase.get<int>(this, '_type') as int;
   @override
-  set typeBack(int value) => RealmObjectBase.set(this, 'typeBack', value);
+  set _type(int value) => RealmObjectBase.set(this, '_type', value);
 
   @override
   Stream<RealmObjectChanges<Option>> get changes =>
@@ -160,7 +160,7 @@ class Option extends $Option with RealmEntity, RealmObjectBase, EmbeddedObject {
       'skills': skills.toEJson(),
       'coins': coins.toEJson(),
       'query': query.toEJson(),
-      'typeBack': typeBack.toEJson(),
+      '_type': _type.toEJson(),
     };
   }
 
@@ -180,7 +180,7 @@ class Option extends $Option with RealmEntity, RealmObjectBase, EmbeddedObject {
         'skills': EJsonValue skills,
         'coins': EJsonValue coins,
         'query': EJsonValue query,
-        'typeBack': EJsonValue typeBack,
+        '_type': EJsonValue _type,
       } =>
         Option(
           desc: fromEJson(desc),
@@ -195,7 +195,7 @@ class Option extends $Option with RealmEntity, RealmObjectBase, EmbeddedObject {
           skills: fromEJson(skills),
           coins: fromEJson(coins),
           query: fromEJson(query),
-          typeBack: fromEJson(typeBack),
+          type: fromEJson(_type),
         ),
       _ => raiseInvalidEJson(ejson),
     };
@@ -223,107 +223,7 @@ class Option extends $Option with RealmEntity, RealmObjectBase, EmbeddedObject {
       SchemaProperty('coins', RealmPropertyType.object,
           optional: true, linkTarget: 'Coins'),
       SchemaProperty('query', RealmPropertyType.string, optional: true),
-      SchemaProperty('typeBack', RealmPropertyType.int),
-    ]);
-  }();
-
-  @override
-  SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
-}
-
-class DiceRoller extends $DiceRoller
-    with RealmEntity, RealmObjectBase, EmbeddedObject {
-  static var _defaultsSet = false;
-
-  DiceRoller({
-    int numDice = 1,
-    int modifier = 0,
-    bool multiply = false,
-    int dieIndex = 0,
-  }) {
-    if (!_defaultsSet) {
-      _defaultsSet = RealmObjectBase.setDefaults<DiceRoller>({
-        'numDice': 1,
-        'modifier': 0,
-        'multiply': false,
-        'dieIndex': 0,
-      });
-    }
-    RealmObjectBase.set(this, 'numDice', numDice);
-    RealmObjectBase.set(this, 'modifier', modifier);
-    RealmObjectBase.set(this, 'multiply', multiply);
-    RealmObjectBase.set(this, 'dieIndex', dieIndex);
-  }
-
-  DiceRoller._();
-
-  @override
-  int get numDice => RealmObjectBase.get<int>(this, 'numDice') as int;
-  @override
-  set numDice(int value) => RealmObjectBase.set(this, 'numDice', value);
-
-  @override
-  int get modifier => RealmObjectBase.get<int>(this, 'modifier') as int;
-  @override
-  set modifier(int value) => RealmObjectBase.set(this, 'modifier', value);
-
-  @override
-  bool get multiply => RealmObjectBase.get<bool>(this, 'multiply') as bool;
-  @override
-  set multiply(bool value) => RealmObjectBase.set(this, 'multiply', value);
-
-  @override
-  int get dieIndex => RealmObjectBase.get<int>(this, 'dieIndex') as int;
-  @override
-  set dieIndex(int value) => RealmObjectBase.set(this, 'dieIndex', value);
-
-  @override
-  Stream<RealmObjectChanges<DiceRoller>> get changes =>
-      RealmObjectBase.getChanges<DiceRoller>(this);
-
-  @override
-  Stream<RealmObjectChanges<DiceRoller>> changesFor([List<String>? keyPaths]) =>
-      RealmObjectBase.getChangesFor<DiceRoller>(this, keyPaths);
-
-  @override
-  DiceRoller freeze() => RealmObjectBase.freezeObject<DiceRoller>(this);
-
-  EJsonValue toEJson() {
-    return <String, dynamic>{
-      'numDice': numDice.toEJson(),
-      'modifier': modifier.toEJson(),
-      'multiply': multiply.toEJson(),
-      'dieIndex': dieIndex.toEJson(),
-    };
-  }
-
-  static EJsonValue _toEJson(DiceRoller value) => value.toEJson();
-  static DiceRoller _fromEJson(EJsonValue ejson) {
-    return switch (ejson) {
-      {
-        'numDice': EJsonValue numDice,
-        'modifier': EJsonValue modifier,
-        'multiply': EJsonValue multiply,
-        'dieIndex': EJsonValue dieIndex,
-      } =>
-        DiceRoller(
-          numDice: fromEJson(numDice),
-          modifier: fromEJson(modifier),
-          multiply: fromEJson(multiply),
-          dieIndex: fromEJson(dieIndex),
-        ),
-      _ => raiseInvalidEJson(ejson),
-    };
-  }
-
-  static final schema = () {
-    RealmObjectBase.registerFactory(DiceRoller._);
-    register(_toEJson, _fromEJson);
-    return SchemaObject(ObjectType.embeddedObject, DiceRoller, 'DiceRoller', [
-      SchemaProperty('numDice', RealmPropertyType.int),
-      SchemaProperty('modifier', RealmPropertyType.int),
-      SchemaProperty('multiply', RealmPropertyType.bool),
-      SchemaProperty('dieIndex', RealmPropertyType.int),
+      SchemaProperty('_type', RealmPropertyType.int),
     ]);
   }();
 
@@ -339,18 +239,18 @@ class Modifier extends $Modifier
     String desc = 'No Description',
     DiceRoller? dice,
     int? modifierNum,
-    int typeBack = 0,
+    int type = 0,
   }) {
     if (!_defaultsSet) {
       _defaultsSet = RealmObjectBase.setDefaults<Modifier>({
         'desc': 'No Description',
-        'typeBack': 0,
+        '_type': 0,
       });
     }
     RealmObjectBase.set(this, 'desc', desc);
     RealmObjectBase.set(this, 'dice', dice);
     RealmObjectBase.set(this, 'modifierNum', modifierNum);
-    RealmObjectBase.set(this, 'typeBack', typeBack);
+    RealmObjectBase.set(this, '_type', type);
   }
 
   Modifier._();
@@ -374,9 +274,9 @@ class Modifier extends $Modifier
       RealmObjectBase.set(this, 'modifierNum', value);
 
   @override
-  int get typeBack => RealmObjectBase.get<int>(this, 'typeBack') as int;
+  int get _type => RealmObjectBase.get<int>(this, '_type') as int;
   @override
-  set typeBack(int value) => RealmObjectBase.set(this, 'typeBack', value);
+  set _type(int value) => RealmObjectBase.set(this, '_type', value);
 
   @override
   Stream<RealmObjectChanges<Modifier>> get changes =>
@@ -394,7 +294,7 @@ class Modifier extends $Modifier
       'desc': desc.toEJson(),
       'dice': dice.toEJson(),
       'modifierNum': modifierNum.toEJson(),
-      'typeBack': typeBack.toEJson(),
+      '_type': _type.toEJson(),
     };
   }
 
@@ -405,13 +305,13 @@ class Modifier extends $Modifier
         'desc': EJsonValue desc,
         'dice': EJsonValue dice,
         'modifierNum': EJsonValue modifierNum,
-        'typeBack': EJsonValue typeBack,
+        '_type': EJsonValue _type,
       } =>
         Modifier(
           desc: fromEJson(desc),
           dice: fromEJson(dice),
           modifierNum: fromEJson(modifierNum),
-          typeBack: fromEJson(typeBack),
+          type: fromEJson(_type),
         ),
       _ => raiseInvalidEJson(ejson),
     };
@@ -425,7 +325,7 @@ class Modifier extends $Modifier
       SchemaProperty('dice', RealmPropertyType.object,
           optional: true, linkTarget: 'DiceRoller'),
       SchemaProperty('modifierNum', RealmPropertyType.int, optional: true),
-      SchemaProperty('typeBack', RealmPropertyType.int),
+      SchemaProperty('_type', RealmPropertyType.int),
     ]);
   }();
 
@@ -438,15 +338,15 @@ class Damage extends $Damage with RealmEntity, RealmObjectBase, EmbeddedObject {
 
   Damage({
     DiceRoller? dice,
-    int typeBack = 0,
+    int type = 0,
   }) {
     if (!_defaultsSet) {
       _defaultsSet = RealmObjectBase.setDefaults<Damage>({
-        'typeBack': 0,
+        '_type': 0,
       });
     }
     RealmObjectBase.set(this, 'dice', dice);
-    RealmObjectBase.set(this, 'typeBack', typeBack);
+    RealmObjectBase.set(this, '_type', type);
   }
 
   Damage._();
@@ -459,9 +359,9 @@ class Damage extends $Damage with RealmEntity, RealmObjectBase, EmbeddedObject {
       RealmObjectBase.set(this, 'dice', value);
 
   @override
-  int get typeBack => RealmObjectBase.get<int>(this, 'typeBack') as int;
+  int get _type => RealmObjectBase.get<int>(this, '_type') as int;
   @override
-  set typeBack(int value) => RealmObjectBase.set(this, 'typeBack', value);
+  set _type(int value) => RealmObjectBase.set(this, '_type', value);
 
   @override
   Stream<RealmObjectChanges<Damage>> get changes =>
@@ -477,7 +377,7 @@ class Damage extends $Damage with RealmEntity, RealmObjectBase, EmbeddedObject {
   EJsonValue toEJson() {
     return <String, dynamic>{
       'dice': dice.toEJson(),
-      'typeBack': typeBack.toEJson(),
+      '_type': _type.toEJson(),
     };
   }
 
@@ -486,11 +386,11 @@ class Damage extends $Damage with RealmEntity, RealmObjectBase, EmbeddedObject {
     return switch (ejson) {
       {
         'dice': EJsonValue dice,
-        'typeBack': EJsonValue typeBack,
+        '_type': EJsonValue _type,
       } =>
         Damage(
           dice: fromEJson(dice),
-          typeBack: fromEJson(typeBack),
+          type: fromEJson(_type),
         ),
       _ => raiseInvalidEJson(ejson),
     };
@@ -502,7 +402,7 @@ class Damage extends $Damage with RealmEntity, RealmObjectBase, EmbeddedObject {
     return SchemaObject(ObjectType.embeddedObject, Damage, 'Damage', [
       SchemaProperty('dice', RealmPropertyType.object,
           optional: true, linkTarget: 'DiceRoller'),
-      SchemaProperty('typeBack', RealmPropertyType.int),
+      SchemaProperty('_type', RealmPropertyType.int),
     ]);
   }();
 
@@ -516,7 +416,7 @@ class Action extends $Action with RealmEntity, RealmObjectBase, EmbeddedObject {
   Action({
     String name = 'Action',
     Iterable<DiceRoller> hitDice = const [],
-    Iterable<int> damageTypeBack = const [],
+    Iterable<int> damageType = const [],
     String description = 'No Description',
     int toHitModifier = 0,
     String reach = '5',
@@ -525,7 +425,7 @@ class Action extends $Action with RealmEntity, RealmObjectBase, EmbeddedObject {
     int? saveThrowDC,
     bool isLegendary = false,
     Iterable<String> properties = const [],
-    int? saveThrowAbilityBack,
+    int? saveThrowAbilities,
   }) {
     if (!_defaultsSet) {
       _defaultsSet = RealmObjectBase.setDefaults<Action>({
@@ -542,7 +442,7 @@ class Action extends $Action with RealmEntity, RealmObjectBase, EmbeddedObject {
     RealmObjectBase.set<RealmList<DiceRoller>>(
         this, 'hitDice', RealmList<DiceRoller>(hitDice));
     RealmObjectBase.set<RealmList<int>>(
-        this, 'damageTypeBack', RealmList<int>(damageTypeBack));
+        this, '_damageType', RealmList<int>(damageType));
     RealmObjectBase.set(this, 'description', description);
     RealmObjectBase.set(this, 'toHitModifier', toHitModifier);
     RealmObjectBase.set(this, 'reach', reach);
@@ -552,7 +452,7 @@ class Action extends $Action with RealmEntity, RealmObjectBase, EmbeddedObject {
     RealmObjectBase.set(this, 'isLegendary', isLegendary);
     RealmObjectBase.set<RealmList<String>>(
         this, 'properties', RealmList<String>(properties));
-    RealmObjectBase.set(this, 'saveThrowAbilityBack', saveThrowAbilityBack);
+    RealmObjectBase.set(this, '_saveThrowAbilities', saveThrowAbilities);
   }
 
   Action._();
@@ -570,10 +470,10 @@ class Action extends $Action with RealmEntity, RealmObjectBase, EmbeddedObject {
       throw RealmUnsupportedSetError();
 
   @override
-  RealmList<int> get damageTypeBack =>
-      RealmObjectBase.get<int>(this, 'damageTypeBack') as RealmList<int>;
+  RealmList<int> get _damageType =>
+      RealmObjectBase.get<int>(this, '_damageType') as RealmList<int>;
   @override
-  set damageTypeBack(covariant RealmList<int> value) =>
+  set _damageType(covariant RealmList<int> value) =>
       throw RealmUnsupportedSetError();
 
   @override
@@ -628,11 +528,11 @@ class Action extends $Action with RealmEntity, RealmObjectBase, EmbeddedObject {
       throw RealmUnsupportedSetError();
 
   @override
-  int? get saveThrowAbilityBack =>
-      RealmObjectBase.get<int>(this, 'saveThrowAbilityBack') as int?;
+  int? get _saveThrowAbilities =>
+      RealmObjectBase.get<int>(this, '_saveThrowAbilities') as int?;
   @override
-  set saveThrowAbilityBack(int? value) =>
-      RealmObjectBase.set(this, 'saveThrowAbilityBack', value);
+  set _saveThrowAbilities(int? value) =>
+      RealmObjectBase.set(this, '_saveThrowAbilities', value);
 
   @override
   Stream<RealmObjectChanges<Action>> get changes =>
@@ -649,7 +549,7 @@ class Action extends $Action with RealmEntity, RealmObjectBase, EmbeddedObject {
     return <String, dynamic>{
       'name': name.toEJson(),
       'hitDice': hitDice.toEJson(),
-      'damageTypeBack': damageTypeBack.toEJson(),
+      '_damageType': _damageType.toEJson(),
       'description': description.toEJson(),
       'toHitModifier': toHitModifier.toEJson(),
       'reach': reach.toEJson(),
@@ -658,7 +558,7 @@ class Action extends $Action with RealmEntity, RealmObjectBase, EmbeddedObject {
       'saveThrowDC': saveThrowDC.toEJson(),
       'isLegendary': isLegendary.toEJson(),
       'properties': properties.toEJson(),
-      'saveThrowAbilityBack': saveThrowAbilityBack.toEJson(),
+      '_saveThrowAbilities': _saveThrowAbilities.toEJson(),
     };
   }
 
@@ -668,7 +568,7 @@ class Action extends $Action with RealmEntity, RealmObjectBase, EmbeddedObject {
       {
         'name': EJsonValue name,
         'hitDice': EJsonValue hitDice,
-        'damageTypeBack': EJsonValue damageTypeBack,
+        '_damageType': EJsonValue _damageType,
         'description': EJsonValue description,
         'toHitModifier': EJsonValue toHitModifier,
         'reach': EJsonValue reach,
@@ -677,12 +577,12 @@ class Action extends $Action with RealmEntity, RealmObjectBase, EmbeddedObject {
         'saveThrowDC': EJsonValue saveThrowDC,
         'isLegendary': EJsonValue isLegendary,
         'properties': EJsonValue properties,
-        'saveThrowAbilityBack': EJsonValue saveThrowAbilityBack,
+        '_saveThrowAbilities': EJsonValue _saveThrowAbilities,
       } =>
         Action(
           name: fromEJson(name),
           hitDice: fromEJson(hitDice),
-          damageTypeBack: fromEJson(damageTypeBack),
+          damageType: fromEJson(_damageType),
           description: fromEJson(description),
           toHitModifier: fromEJson(toHitModifier),
           reach: fromEJson(reach),
@@ -691,7 +591,7 @@ class Action extends $Action with RealmEntity, RealmObjectBase, EmbeddedObject {
           saveThrowDC: fromEJson(saveThrowDC),
           isLegendary: fromEJson(isLegendary),
           properties: fromEJson(properties),
-          saveThrowAbilityBack: fromEJson(saveThrowAbilityBack),
+          saveThrowAbilities: fromEJson(_saveThrowAbilities),
         ),
       _ => raiseInvalidEJson(ejson),
     };
@@ -704,7 +604,7 @@ class Action extends $Action with RealmEntity, RealmObjectBase, EmbeddedObject {
       SchemaProperty('name', RealmPropertyType.string),
       SchemaProperty('hitDice', RealmPropertyType.object,
           linkTarget: 'DiceRoller', collectionType: RealmCollectionType.list),
-      SchemaProperty('damageTypeBack', RealmPropertyType.int,
+      SchemaProperty('_damageType', RealmPropertyType.int,
           collectionType: RealmCollectionType.list),
       SchemaProperty('description', RealmPropertyType.string),
       SchemaProperty('toHitModifier', RealmPropertyType.int),
@@ -715,7 +615,7 @@ class Action extends $Action with RealmEntity, RealmObjectBase, EmbeddedObject {
       SchemaProperty('isLegendary', RealmPropertyType.bool),
       SchemaProperty('properties', RealmPropertyType.string,
           collectionType: RealmCollectionType.list),
-      SchemaProperty('saveThrowAbilityBack', RealmPropertyType.int,
+      SchemaProperty('_saveThrowAbilities', RealmPropertyType.int,
           optional: true),
     ]);
   }();
@@ -849,14 +749,14 @@ class Feature extends $Feature with RealmEntity, RealmObjectBase, RealmObject {
     Option? option,
     Iterable<Modifier> modifiers = const [],
     Iterable<Action> actions = const [],
-    int typeBack = 0,
+    int type = 0,
     Source? source,
   }) {
     if (!_defaultsSet) {
       _defaultsSet = RealmObjectBase.setDefaults<Feature>({
         'levelAvailable': 1,
         'desc': 'No Description',
-        'typeBack': 0,
+        '_type': 0,
       });
     }
     RealmObjectBase.set(this, 'name', name);
@@ -869,7 +769,7 @@ class Feature extends $Feature with RealmEntity, RealmObjectBase, RealmObject {
         this, 'modifiers', RealmList<Modifier>(modifiers));
     RealmObjectBase.set<RealmList<Action>>(
         this, 'actions', RealmList<Action>(actions));
-    RealmObjectBase.set(this, 'typeBack', typeBack);
+    RealmObjectBase.set(this, '_type', type);
     RealmObjectBase.set(this, 'source', source);
   }
 
@@ -920,9 +820,9 @@ class Feature extends $Feature with RealmEntity, RealmObjectBase, RealmObject {
       throw RealmUnsupportedSetError();
 
   @override
-  int get typeBack => RealmObjectBase.get<int>(this, 'typeBack') as int;
+  int get _type => RealmObjectBase.get<int>(this, '_type') as int;
   @override
-  set typeBack(int value) => RealmObjectBase.set(this, 'typeBack', value);
+  set _type(int value) => RealmObjectBase.set(this, '_type', value);
 
   @override
   Source? get source => RealmObjectBase.get<Source>(this, 'source') as Source?;
@@ -975,7 +875,7 @@ class Feature extends $Feature with RealmEntity, RealmObjectBase, RealmObject {
       'option': option.toEJson(),
       'modifiers': modifiers.toEJson(),
       'actions': actions.toEJson(),
-      'typeBack': typeBack.toEJson(),
+      '_type': _type.toEJson(),
       'source': source.toEJson(),
     };
   }
@@ -991,7 +891,7 @@ class Feature extends $Feature with RealmEntity, RealmObjectBase, RealmObject {
         'option': EJsonValue option,
         'modifiers': EJsonValue modifiers,
         'actions': EJsonValue actions,
-        'typeBack': EJsonValue typeBack,
+        '_type': EJsonValue _type,
         'source': EJsonValue source,
       } =>
         Feature(
@@ -1002,7 +902,7 @@ class Feature extends $Feature with RealmEntity, RealmObjectBase, RealmObject {
           option: fromEJson(option),
           modifiers: fromEJson(modifiers),
           actions: fromEJson(actions),
-          typeBack: fromEJson(typeBack),
+          type: fromEJson(_type),
           source: fromEJson(source),
         ),
       _ => raiseInvalidEJson(ejson),
@@ -1024,7 +924,7 @@ class Feature extends $Feature with RealmEntity, RealmObjectBase, RealmObject {
           linkTarget: 'Modifier', collectionType: RealmCollectionType.list),
       SchemaProperty('actions', RealmPropertyType.object,
           linkTarget: 'Action', collectionType: RealmCollectionType.list),
-      SchemaProperty('typeBack', RealmPropertyType.int),
+      SchemaProperty('_type', RealmPropertyType.int),
       SchemaProperty('source', RealmPropertyType.object,
           optional: true, linkTarget: 'Source'),
       SchemaProperty('classes', RealmPropertyType.linkingObjects,
@@ -1046,28 +946,28 @@ class DndTable extends $DndTable
     with RealmEntity, RealmObjectBase, EmbeddedObject {
   DndTable({
     Iterable<String> columns = const [],
-    Iterable<RealmValue> table = const [],
+    Iterable<RealmValue> values = const [],
   }) {
     RealmObjectBase.set<RealmList<String>>(
-        this, 'columns', RealmList<String>(columns));
+        this, '_columns', RealmList<String>(columns));
     RealmObjectBase.set<RealmList<RealmValue>>(
-        this, 'table', RealmList<RealmValue>(table));
+        this, '_values', RealmList<RealmValue>(values));
   }
 
   DndTable._();
 
   @override
-  RealmList<String> get columns =>
-      RealmObjectBase.get<String>(this, 'columns') as RealmList<String>;
+  RealmList<String> get _columns =>
+      RealmObjectBase.get<String>(this, '_columns') as RealmList<String>;
   @override
-  set columns(covariant RealmList<String> value) =>
+  set _columns(covariant RealmList<String> value) =>
       throw RealmUnsupportedSetError();
 
   @override
-  RealmList<RealmValue> get table =>
-      RealmObjectBase.get<RealmValue>(this, 'table') as RealmList<RealmValue>;
+  RealmList<RealmValue> get _values =>
+      RealmObjectBase.get<RealmValue>(this, '_values') as RealmList<RealmValue>;
   @override
-  set table(covariant RealmList<RealmValue> value) =>
+  set _values(covariant RealmList<RealmValue> value) =>
       throw RealmUnsupportedSetError();
 
   @override
@@ -1083,8 +983,8 @@ class DndTable extends $DndTable
 
   EJsonValue toEJson() {
     return <String, dynamic>{
-      'columns': columns.toEJson(),
-      'table': table.toEJson(),
+      '_columns': _columns.toEJson(),
+      '_values': _values.toEJson(),
     };
   }
 
@@ -1092,12 +992,12 @@ class DndTable extends $DndTable
   static DndTable _fromEJson(EJsonValue ejson) {
     return switch (ejson) {
       {
-        'columns': EJsonValue columns,
-        'table': EJsonValue table,
+        '_columns': EJsonValue _columns,
+        '_values': EJsonValue _values,
       } =>
         DndTable(
-          columns: fromEJson(columns),
-          table: fromEJson(table),
+          columns: fromEJson(_columns),
+          values: fromEJson(_values),
         ),
       _ => raiseInvalidEJson(ejson),
     };
@@ -1107,9 +1007,9 @@ class DndTable extends $DndTable
     RealmObjectBase.registerFactory(DndTable._);
     register(_toEJson, _fromEJson);
     return SchemaObject(ObjectType.embeddedObject, DndTable, 'DndTable', [
-      SchemaProperty('columns', RealmPropertyType.string,
+      SchemaProperty('_columns', RealmPropertyType.string,
           collectionType: RealmCollectionType.list),
-      SchemaProperty('table', RealmPropertyType.mixed,
+      SchemaProperty('_values', RealmPropertyType.mixed,
           optional: true, collectionType: RealmCollectionType.list),
     ]);
   }();
@@ -1251,7 +1151,7 @@ class AbilityScore extends $AbilityScore
   static var _defaultsSet = false;
 
   AbilityScore(
-    int typeBack, {
+    int _type, {
     int saveThrowBonus = 0,
     int baseScore = 0,
     int raceBonus = 0,
@@ -1275,7 +1175,7 @@ class AbilityScore extends $AbilityScore
     RealmObjectBase.set(this, 'miscBonus', miscBonus);
     RealmObjectBase.set(this, 'abilityImprovement', abilityImprovement);
     RealmObjectBase.set(this, 'level', level);
-    RealmObjectBase.set(this, 'typeBack', typeBack);
+    RealmObjectBase.set(this, '_type', _type);
   }
 
   AbilityScore._();
@@ -1315,9 +1215,9 @@ class AbilityScore extends $AbilityScore
   set level(int value) => RealmObjectBase.set(this, 'level', value);
 
   @override
-  int get typeBack => RealmObjectBase.get<int>(this, 'typeBack') as int;
+  int get _type => RealmObjectBase.get<int>(this, '_type') as int;
   @override
-  set typeBack(int value) => RealmObjectBase.set(this, 'typeBack', value);
+  set _type(int value) => RealmObjectBase.set(this, '_type', value);
 
   @override
   Stream<RealmObjectChanges<AbilityScore>> get changes =>
@@ -1339,7 +1239,7 @@ class AbilityScore extends $AbilityScore
       'miscBonus': miscBonus.toEJson(),
       'abilityImprovement': abilityImprovement.toEJson(),
       'level': level.toEJson(),
-      'typeBack': typeBack.toEJson(),
+      '_type': _type.toEJson(),
     };
   }
 
@@ -1353,10 +1253,10 @@ class AbilityScore extends $AbilityScore
         'miscBonus': EJsonValue miscBonus,
         'abilityImprovement': EJsonValue abilityImprovement,
         'level': EJsonValue level,
-        'typeBack': EJsonValue typeBack,
+        '_type': EJsonValue _type,
       } =>
         AbilityScore(
-          fromEJson(typeBack),
+          fromEJson(_type),
           saveThrowBonus: fromEJson(saveThrowBonus),
           baseScore: fromEJson(baseScore),
           raceBonus: fromEJson(raceBonus),
@@ -1379,7 +1279,7 @@ class AbilityScore extends $AbilityScore
       SchemaProperty('miscBonus', RealmPropertyType.int),
       SchemaProperty('abilityImprovement', RealmPropertyType.int),
       SchemaProperty('level', RealmPropertyType.int),
-      SchemaProperty('typeBack', RealmPropertyType.int),
+      SchemaProperty('_type', RealmPropertyType.int),
     ]);
   }();
 
@@ -1398,7 +1298,7 @@ class Abilities extends $Abilities
     AbilityScore? intelligence,
     AbilityScore? wisdom,
     AbilityScore? charisma,
-    int levelBack = 1,
+    int level = 1,
     Map<String, int> skillBonuses = const {},
     bool athlete = false,
     bool acrobat = false,
@@ -1421,7 +1321,7 @@ class Abilities extends $Abilities
   }) {
     if (!_defaultsSet) {
       _defaultsSet = RealmObjectBase.setDefaults<Abilities>({
-        'levelBack': 1,
+        '_level': 1,
         'athlete': false,
         'acrobat': false,
         'sleight': false,
@@ -1448,7 +1348,7 @@ class Abilities extends $Abilities
     RealmObjectBase.set(this, 'intelligence', intelligence);
     RealmObjectBase.set(this, 'wisdom', wisdom);
     RealmObjectBase.set(this, 'charisma', charisma);
-    RealmObjectBase.set(this, 'levelBack', levelBack);
+    RealmObjectBase.set(this, '_level', level);
     RealmObjectBase.set<RealmMap<int>>(
         this, 'skillBonuses', RealmMap<int>(skillBonuses));
     RealmObjectBase.set(this, 'athlete', athlete);
@@ -1516,9 +1416,9 @@ class Abilities extends $Abilities
       RealmObjectBase.set(this, 'charisma', value);
 
   @override
-  int get levelBack => RealmObjectBase.get<int>(this, 'levelBack') as int;
+  int get _level => RealmObjectBase.get<int>(this, '_level') as int;
   @override
-  set levelBack(int value) => RealmObjectBase.set(this, 'levelBack', value);
+  set _level(int value) => RealmObjectBase.set(this, '_level', value);
 
   @override
   RealmMap<int> get skillBonuses =>
@@ -1640,7 +1540,7 @@ class Abilities extends $Abilities
       'intelligence': intelligence.toEJson(),
       'wisdom': wisdom.toEJson(),
       'charisma': charisma.toEJson(),
-      'levelBack': levelBack.toEJson(),
+      '_level': _level.toEJson(),
       'skillBonuses': skillBonuses.toEJson(),
       'athlete': athlete.toEJson(),
       'acrobat': acrobat.toEJson(),
@@ -1673,7 +1573,7 @@ class Abilities extends $Abilities
         'intelligence': EJsonValue intelligence,
         'wisdom': EJsonValue wisdom,
         'charisma': EJsonValue charisma,
-        'levelBack': EJsonValue levelBack,
+        '_level': EJsonValue _level,
         'skillBonuses': EJsonValue skillBonuses,
         'athlete': EJsonValue athlete,
         'acrobat': EJsonValue acrobat,
@@ -1701,7 +1601,7 @@ class Abilities extends $Abilities
           intelligence: fromEJson(intelligence),
           wisdom: fromEJson(wisdom),
           charisma: fromEJson(charisma),
-          levelBack: fromEJson(levelBack),
+          level: fromEJson(_level),
           skillBonuses: fromEJson(skillBonuses),
           athlete: fromEJson(athlete),
           acrobat: fromEJson(acrobat),
@@ -1742,7 +1642,7 @@ class Abilities extends $Abilities
           optional: true, linkTarget: 'AbilityScore'),
       SchemaProperty('charisma', RealmPropertyType.object,
           optional: true, linkTarget: 'AbilityScore'),
-      SchemaProperty('levelBack', RealmPropertyType.int),
+      SchemaProperty('_level', RealmPropertyType.int),
       SchemaProperty('skillBonuses', RealmPropertyType.int,
           collectionType: RealmCollectionType.map),
       SchemaProperty('athlete', RealmPropertyType.bool),
@@ -1783,8 +1683,8 @@ class Spellcaster extends $Spellcaster
     bool canUseFocus = false,
     bool isInnate = false,
     bool isPsionic = false,
-    int spellAbilityBack = 0,
-    int focusTypeBack = 0,
+    int spellAbility = 0,
+    int focusType = 0,
     String? focusSubtype,
   }) {
     if (!_defaultsSet) {
@@ -1796,8 +1696,8 @@ class Spellcaster extends $Spellcaster
         'canUseFocus': false,
         'isInnate': false,
         'isPsionic': false,
-        'spellAbilityBack': 0,
-        'focusTypeBack': 0,
+        '_spellAbility': 0,
+        '_focusType': 0,
       });
     }
     RealmObjectBase.set(this, 'levelObtained', levelObtained);
@@ -1809,8 +1709,8 @@ class Spellcaster extends $Spellcaster
     RealmObjectBase.set(this, 'canUseFocus', canUseFocus);
     RealmObjectBase.set(this, 'isInnate', isInnate);
     RealmObjectBase.set(this, 'isPsionic', isPsionic);
-    RealmObjectBase.set(this, 'spellAbilityBack', spellAbilityBack);
-    RealmObjectBase.set(this, 'focusTypeBack', focusTypeBack);
+    RealmObjectBase.set(this, '_spellAbility', spellAbility);
+    RealmObjectBase.set(this, '_focusType', focusType);
     RealmObjectBase.set(this, 'focusSubtype', focusSubtype);
   }
 
@@ -1867,18 +1767,16 @@ class Spellcaster extends $Spellcaster
   set isPsionic(bool value) => RealmObjectBase.set(this, 'isPsionic', value);
 
   @override
-  int get spellAbilityBack =>
-      RealmObjectBase.get<int>(this, 'spellAbilityBack') as int;
+  int get _spellAbility =>
+      RealmObjectBase.get<int>(this, '_spellAbility') as int;
   @override
-  set spellAbilityBack(int value) =>
-      RealmObjectBase.set(this, 'spellAbilityBack', value);
+  set _spellAbility(int value) =>
+      RealmObjectBase.set(this, '_spellAbility', value);
 
   @override
-  int get focusTypeBack =>
-      RealmObjectBase.get<int>(this, 'focusTypeBack') as int;
+  int get _focusType => RealmObjectBase.get<int>(this, '_focusType') as int;
   @override
-  set focusTypeBack(int value) =>
-      RealmObjectBase.set(this, 'focusTypeBack', value);
+  set _focusType(int value) => RealmObjectBase.set(this, '_focusType', value);
 
   @override
   String? get focusSubtype =>
@@ -1909,8 +1807,8 @@ class Spellcaster extends $Spellcaster
       'canUseFocus': canUseFocus.toEJson(),
       'isInnate': isInnate.toEJson(),
       'isPsionic': isPsionic.toEJson(),
-      'spellAbilityBack': spellAbilityBack.toEJson(),
-      'focusTypeBack': focusTypeBack.toEJson(),
+      '_spellAbility': _spellAbility.toEJson(),
+      '_focusType': _focusType.toEJson(),
       'focusSubtype': focusSubtype.toEJson(),
     };
   }
@@ -1927,8 +1825,8 @@ class Spellcaster extends $Spellcaster
         'canUseFocus': EJsonValue canUseFocus,
         'isInnate': EJsonValue isInnate,
         'isPsionic': EJsonValue isPsionic,
-        'spellAbilityBack': EJsonValue spellAbilityBack,
-        'focusTypeBack': EJsonValue focusTypeBack,
+        '_spellAbility': EJsonValue _spellAbility,
+        '_focusType': EJsonValue _focusType,
         'focusSubtype': EJsonValue focusSubtype,
       } =>
         Spellcaster(
@@ -1940,8 +1838,8 @@ class Spellcaster extends $Spellcaster
           canUseFocus: fromEJson(canUseFocus),
           isInnate: fromEJson(isInnate),
           isPsionic: fromEJson(isPsionic),
-          spellAbilityBack: fromEJson(spellAbilityBack),
-          focusTypeBack: fromEJson(focusTypeBack),
+          spellAbility: fromEJson(_spellAbility),
+          focusType: fromEJson(_focusType),
           focusSubtype: fromEJson(focusSubtype),
         ),
       _ => raiseInvalidEJson(ejson),
@@ -1961,8 +1859,8 @@ class Spellcaster extends $Spellcaster
       SchemaProperty('canUseFocus', RealmPropertyType.bool),
       SchemaProperty('isInnate', RealmPropertyType.bool),
       SchemaProperty('isPsionic', RealmPropertyType.bool),
-      SchemaProperty('spellAbilityBack', RealmPropertyType.int),
-      SchemaProperty('focusTypeBack', RealmPropertyType.int),
+      SchemaProperty('_spellAbility', RealmPropertyType.int),
+      SchemaProperty('_focusType', RealmPropertyType.int),
       SchemaProperty('focusSubtype', RealmPropertyType.string, optional: true),
     ]);
   }();

@@ -174,7 +174,7 @@ class CampaignCharacter extends $CampaignCharacter
     int level = 1,
     int armorClass = 10,
     int hitPoints = 1,
-    int sizeBack = 0,
+    int size = 0,
     int strength = 8,
     int dexterity = 8,
     int constitution = 8,
@@ -189,7 +189,7 @@ class CampaignCharacter extends $CampaignCharacter
         'level': 1,
         'armorClass': 10,
         'hitPoints': 1,
-        'sizeBack': 0,
+        '_size': 0,
         'strength': 8,
         'dexterity': 8,
         'constitution': 8,
@@ -202,7 +202,7 @@ class CampaignCharacter extends $CampaignCharacter
     RealmObjectBase.set(this, 'level', level);
     RealmObjectBase.set(this, 'armorClass', armorClass);
     RealmObjectBase.set(this, 'hitPoints', hitPoints);
-    RealmObjectBase.set(this, 'sizeBack', sizeBack);
+    RealmObjectBase.set(this, '_size', size);
     RealmObjectBase.set(this, 'strength', strength);
     RealmObjectBase.set(this, 'dexterity', dexterity);
     RealmObjectBase.set(this, 'constitution', constitution);
@@ -236,9 +236,9 @@ class CampaignCharacter extends $CampaignCharacter
   set hitPoints(int value) => RealmObjectBase.set(this, 'hitPoints', value);
 
   @override
-  int get sizeBack => RealmObjectBase.get<int>(this, 'sizeBack') as int;
+  int get _size => RealmObjectBase.get<int>(this, '_size') as int;
   @override
-  set sizeBack(int value) => RealmObjectBase.set(this, 'sizeBack', value);
+  set _size(int value) => RealmObjectBase.set(this, '_size', value);
 
   @override
   int get strength => RealmObjectBase.get<int>(this, 'strength') as int;
@@ -302,7 +302,7 @@ class CampaignCharacter extends $CampaignCharacter
       'level': level.toEJson(),
       'armorClass': armorClass.toEJson(),
       'hitPoints': hitPoints.toEJson(),
-      'sizeBack': sizeBack.toEJson(),
+      '_size': _size.toEJson(),
       'strength': strength.toEJson(),
       'dexterity': dexterity.toEJson(),
       'constitution': constitution.toEJson(),
@@ -322,7 +322,7 @@ class CampaignCharacter extends $CampaignCharacter
         'level': EJsonValue level,
         'armorClass': EJsonValue armorClass,
         'hitPoints': EJsonValue hitPoints,
-        'sizeBack': EJsonValue sizeBack,
+        '_size': EJsonValue _size,
         'strength': EJsonValue strength,
         'dexterity': EJsonValue dexterity,
         'constitution': EJsonValue constitution,
@@ -337,7 +337,7 @@ class CampaignCharacter extends $CampaignCharacter
           level: fromEJson(level),
           armorClass: fromEJson(armorClass),
           hitPoints: fromEJson(hitPoints),
-          sizeBack: fromEJson(sizeBack),
+          size: fromEJson(_size),
           strength: fromEJson(strength),
           dexterity: fromEJson(dexterity),
           constitution: fromEJson(constitution),
@@ -360,7 +360,7 @@ class CampaignCharacter extends $CampaignCharacter
       SchemaProperty('level', RealmPropertyType.int),
       SchemaProperty('armorClass', RealmPropertyType.int),
       SchemaProperty('hitPoints', RealmPropertyType.int),
-      SchemaProperty('sizeBack', RealmPropertyType.int),
+      SchemaProperty('_size', RealmPropertyType.int),
       SchemaProperty('strength', RealmPropertyType.int),
       SchemaProperty('dexterity', RealmPropertyType.int),
       SchemaProperty('constitution', RealmPropertyType.int),

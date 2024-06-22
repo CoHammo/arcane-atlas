@@ -3,6 +3,7 @@ import 'package:realm/realm.dart';
 import 'extras.dart';
 import '../enums.dart';
 import 'class.dart';
+import 'dice.dart';
 
 part 'spell.realm.dart';
 
@@ -36,11 +37,11 @@ class $Spell implements IName, IImage {
   @Backlink(#classSpells)
   late Iterable<$Class> classes;
 
-  late List<int> componentsBack = [];
+  late List<int> _components = [];
   List<Components> get components =>
-      [for (int i in componentsBack) Components.values[i]];
+      [for (int i in _components) Components.values[i]];
   set components(List<Components> val) =>
-      componentsBack = [for (Components c in val) c.index];
+      _components = [for (Components c in val) c.index];
 
   late bool characterBasedDamage = false;
   late $DiceRoller? dice;

@@ -25,9 +25,9 @@ class $Option {
   late $Coins? coins;
   late String? query;
 
-  late int typeBack = 0;
-  OptionTypes get type => OptionTypes.values[typeBack];
-  set type(OptionTypes val) => typeBack = val.index;
+  late int _type = 0;
+  OptionTypes get type => OptionTypes.values[_type];
+  set type(OptionTypes val) => _type = val.index;
 
   List<T> _getQuery<T extends RealmObject>() {
     return (query == null ? realm.all<T>() : realm.query<T>(query!)).toList();
@@ -68,106 +68,23 @@ class $Option {
 }
 
 @RealmModel(ObjectType.embeddedObject)
-class $DiceRoller {
-  late int numDice = 1;
-  late int modifier = 0;
-  late bool multiply = false;
-
-  late int dieIndex = 0;
-  Dice get die => Dice.values[dieIndex];
-  set die(Dice v) => dieIndex = v.index;
-
-  int get range => die.range;
-  int get average {
-    int num = (((range / 2) + 0.5) * numDice).toInt();
-    return multiply ? num * modifier : num + modifier;
-  }
-
-  Roll roll({
-    int? mod,
-    bool? mult,
-    int dropLowest = 0,
-    int dropHighest = 0,
-  }) {
-    List<int> rolls = die.roll(numDice: numDice);
-    rolls.sort((a, b) => b.compareTo(a));
-    int sum = rolls
-        .getRange(dropHighest, numDice - dropLowest)
-        .fold(0, (sum, i) => sum + i);
-
-    int finalMod = 0;
-    bool finalMult = false;
-
-    mod == null ? finalMod = modifier : finalMod = mod;
-    mult == null ? finalMult = multiply : finalMult = mult;
-
-    return Roll(
-      rolls: rolls,
-      rollSum: sum,
-      modifier: finalMod,
-      total: finalMult ? sum * finalMod : sum + finalMod,
-      name: '$numDice$die${finalMult ? ' x $finalMod' : ' + $finalMod'}',
-    );
-  }
-
-  @override
-  String toString() {
-    String modString = '';
-    if ((multiply && modifier != 1) || (!multiply && modifier != 0)) {
-      multiply ? modString = ' x $modifier' : modString = ' + $modifier';
-    }
-    return '$numDice$die$modString';
-  }
-}
-
-class Roll {
-  Roll({
-    this.rolls,
-    this.rollSum,
-    this.modifier,
-    required this.total,
-    this.name,
-  });
-
-  final List<int>? rolls;
-  final int? rollSum;
-  final int? modifier;
-  final int total;
-  final String? name;
-
-  int? operator [](int index) {
-    return rolls?[index];
-  }
-
-  List<int>? call() {
-    return rolls;
-  }
-
-  @override
-  String toString() {
-    return name ?? total.toString();
-  }
-}
-
-@RealmModel(ObjectType.embeddedObject)
 class $Modifier {
   late String desc = 'No Description';
   late $DiceRoller? dice;
   late int? modifierNum;
 
-  late int typeBack = 0;
-
-  ModifierTypes get type => ModifierTypes.values[typeBack];
-  set type(ModifierTypes val) => typeBack = val.index;
+  late int _type = 0;
+  ModifierTypes get type => ModifierTypes.values[_type];
+  set type(ModifierTypes val) => _type = val.index;
 }
 
 @RealmModel(ObjectType.embeddedObject)
 class $Damage {
   late $DiceRoller? dice;
 
-  late int typeBack = 0;
-  DamageTypes get type => DamageTypes.values[typeBack];
-  set type(DamageTypes val) => typeBack = val.index;
+  late int _type = 0;
+  DamageTypes get type => DamageTypes.values[_type];
+  set type(DamageTypes val) => _type = val.index;
 
   @override
   String toString() {
@@ -182,11 +99,11 @@ class $Action implements IName {
 
   late List<$DiceRoller> hitDice;
 
-  late List<int> damageTypeBack;
+  late List<int> _damageType;
   List<DamageTypes> get damageType =>
-      [for (var d in damageTypeBack) DamageTypes.values[d]];
+      [for (var d in _damageType) DamageTypes.values[d]];
   set damageType(List<DamageTypes> val) =>
-      damageTypeBack = [for (var d in val) d.index];
+      _damageType = [for (var d in val) d.index];
 
   late String description = 'No Description';
   late int toHitModifier = 0;
@@ -197,11 +114,11 @@ class $Action implements IName {
   late bool isLegendary = false;
   late List<String> properties;
 
-  late int? saveThrowAbilityBack;
-  AbilityScores? get saveThrowAbility => saveThrowAbilityBack == null
+  late int? _saveThrowAbilities;
+  AbilityScores? get saveThrowAbility => _saveThrowAbilities == null
       ? null
-      : AbilityScores.values[saveThrowAbilityBack!];
-  set saveThrowAbility(AbilityScores? val) => saveThrowAbilityBack = val?.index;
+      : AbilityScores.values[_saveThrowAbilities!];
+  set saveThrowAbility(AbilityScores? val) => _saveThrowAbilities = val?.index;
 
   @override
   String toString() {
@@ -240,9 +157,9 @@ class $Feature implements IName {
   late List<$Modifier> modifiers;
   late List<$Action> actions;
 
-  late int typeBack = 0;
-  FeatureTypes get type => FeatureTypes.values[typeBack];
-  set type(FeatureTypes val) => typeBack = val.index;
+  late int _type = 0;
+  FeatureTypes get type => FeatureTypes.values[_type];
+  set type(FeatureTypes val) => _type = val.index;
 
   @Backlink(#features)
   late Iterable<$Class> classes;
@@ -253,29 +170,27 @@ class $Feature implements IName {
   late $Source? source;
 
   @override
-  String toString() {
-    return name;
-  }
+  String toString() => name;
 }
 
 @RealmModel(ObjectType.embeddedObject)
 class $DndTable {
-  final List<String> columns = []; // columns.length is number of columns
-  final List<RealmValue> table = []; // table.length is number of rows
+  final List<String> _columns = []; // columns.length is number of columns
+  final List<RealmValue> _values = []; // table.length is number of rows
 
-  List<List> get all {
+  List<List> get table {
     return [
-      columns,
-      for (var row in table) [for (var v in row.asList()) v.value]
+      _columns,
+      for (var row in _values) [for (var v in row.asList()) v.value]
     ];
   }
 
-  set all(List<List> rows) {
-    columns.clear();
-    table.clear();
+  set table(List<List> rows) {
+    _columns.clear();
+    _values.clear();
     if (rows.isNotEmpty) {
       int length = rows[0].length;
-      columns.addAll([for (var col in rows[0]) col.toString()]);
+      _columns.addAll([for (var col in rows[0]) col.toString()]);
       for (List row in rows.getRange(1, rows.length)) {
         int diff = row.length - length;
         if (diff > 0) {
@@ -283,20 +198,20 @@ class $DndTable {
         } else if (diff < 0) {
           row.addAll([for (int i = 0; i > diff; i--) null]);
         }
-        table.add(RealmValue.from(row));
+        _values.add(RealmValue.from(row));
       }
     }
   }
 
   void addRows(List<List> rows) {
     for (List row in rows) {
-      int diff = row.length - columns.length;
+      int diff = row.length - _columns.length;
       if (diff > 0) {
         row.removeRange(row.length - diff, row.length);
       } else if (diff < 0) {
         row.addAll([for (int i = 0; i > diff; i--) '--']);
       }
-      table.add(RealmValue.from(row));
+      _values.add(RealmValue.from(row));
     }
   }
 
@@ -304,7 +219,7 @@ class $DndTable {
   Map<String, dynamic> operator [](int row) {
     if (0 <= row && row < table.length) {
       return Map.fromIterables(
-          columns, [for (var v in table[row].asList()) v.value]);
+          _columns, [for (var v in _values[row].asList()) v.value]);
     } else {
       return {};
     }
@@ -312,7 +227,7 @@ class $DndTable {
 
   @override
   String toString() {
-    List<List> t = all;
+    List<List> t = table;
     String str = '[';
     for (List row in t) {
       str = '$str${row.toString()}\n';
@@ -337,26 +252,9 @@ class $Condition implements IName {
   @PrimaryKey()
   late String name;
 
-  late List<$Modifier> modifiers;
+  late String description;
 
-  static List<Condition> createAll() {
-    return [
-      Condition('Blinded'),
-      Condition('Charmed'),
-      Condition('Deafened'),
-      Condition('Frightened'),
-      Condition('Grappled'),
-      Condition('Incapacitated'),
-      Condition('Invisible'),
-      Condition('Paralyzed'),
-      Condition('Petrified'),
-      Condition('Poisoned'),
-      Condition('Prone'),
-      Condition('Restrained'),
-      Condition('Stunned'),
-      Condition('Unconscious'),
-    ];
-  }
+  late List<$Modifier> modifiers;
 }
 
 @RealmModel(ObjectType.embeddedObject)
@@ -372,9 +270,9 @@ class $AbilityScore {
   late int abilityImprovement = 0;
   late int level = 1;
 
-  late int typeBack;
-  AbilityScores get type => AbilityScores.values[typeBack];
-  set type(AbilityScores val) => typeBack = val.index;
+  late int _type;
+  AbilityScores get type => AbilityScores.values[_type];
+  set type(AbilityScores val) => _type = val.index;
 
   @override
   String toString() {
@@ -400,10 +298,10 @@ class $Abilities {
         AbilityScores.cha.shortName: charisma! as AbilityScore,
       };
 
-  late int levelBack = 1;
-  int get level => levelBack;
+  late int _level = 1;
+  int get level => _level;
   set level(int lev) {
-    levelBack = lev;
+    _level = lev;
     for (var ab in scores.entries) {
       ab.value.level = lev;
     }
@@ -527,13 +425,13 @@ class $Spellcaster {
   late bool isInnate = false;
   late bool isPsionic = false;
 
-  late int spellAbilityBack = 0; // enum
-  AbilityScores get spellAbility => AbilityScores.values[spellAbilityBack];
-  set spellAbility(AbilityScores value) => spellAbilityBack = value.index;
+  late int _spellAbility = 0; // enum
+  AbilityScores get spellAbility => AbilityScores.values[_spellAbility];
+  set spellAbility(AbilityScores value) => _spellAbility = value.index;
 
-  late int focusTypeBack = 0;
-  EquipmentTypes get focusType => EquipmentTypes.values[focusTypeBack];
-  set focusType(EquipmentTypes val) => focusTypeBack = val.index;
+  late int _focusType = 0;
+  EquipmentTypes get focusType => EquipmentTypes.values[_focusType];
+  set focusType(EquipmentTypes val) => _focusType = val.index;
 
   late String? focusSubtype;
 
