@@ -1,9 +1,11 @@
+import 'package:arcane_atlas/ui/extras/bottom_dice_roller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../extras/option_widgets.dart';
 import '/enums.dart';
 import '/models/models.dart';
 import '/ui/info_pages.dart';
-import '/ui/ui_extras.dart';
+import '../extras/ui_extras.dart';
 import '/globals.dart';
 import 'package:signals/signals_flutter.dart';
 
@@ -186,7 +188,7 @@ class _CharacterBackgroundBuilderState extends State<CharacterBackgroundBuilder>
                 FilledButton(
                   onPressed: () {
                     Scaffold.of(context).showBottomSheet(
-                      (context) => DiceBottomSheet(
+                      (context) => BottomDiceRoller(
                           DiceRoller(dieIndex: theBack.specialty!.diceBack)),
                       enableDrag: false,
                     );
@@ -206,7 +208,7 @@ class _CharacterBackgroundBuilderState extends State<CharacterBackgroundBuilder>
               FilledButton(
                 onPressed: () => Scaffold.of(context).showBottomSheet(
                   (context) =>
-                      DiceBottomSheet(DiceRoller(dieIndex: charList.diceBack)),
+                      BottomDiceRoller(DiceRoller(dieIndex: charList.diceBack)),
                   enableDrag: false,
                 ),
                 style: FilledButton.styleFrom(shape: dndButtonShape),

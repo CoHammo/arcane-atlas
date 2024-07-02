@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import '../extras/option_widgets.dart';
 import '/globals.dart';
 import '/models/models.dart';
-import '/ui/ui_extras.dart';
+import '../extras/ui_extras.dart';
 import '/enums.dart';
 import '/ui/info_pages.dart';
 import 'package:signals/signals_flutter.dart';
@@ -29,14 +30,14 @@ class _RaceTabState extends State<RaceTab> with AutomaticKeepAliveClientMixin {
     }
   }
 
-  var allowedRaces = realm.query<Race>('isSubrace == false && source IN \$0',
-      [mCharacter!.allowedSources.value]);
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Watch((context) {
       if (mCharacter!.race == null) {
+        var allowedRaces = realm.query<Race>(
+            'isSubrace == false && source IN \$0',
+            [mCharacter!.allowedSources.value]);
         return ListView.separated(
           itemCount: allowedRaces.length,
           itemBuilder: (context, index) {

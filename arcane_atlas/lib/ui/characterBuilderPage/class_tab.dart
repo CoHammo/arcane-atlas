@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../extras/option_widgets.dart';
 import '/models/models.dart';
-import '/ui/ui_extras.dart';
+import '../extras/ui_extras.dart';
 import '/enums.dart';
 import '/ui/info_pages.dart';
 import '/globals.dart';

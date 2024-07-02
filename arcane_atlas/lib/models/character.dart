@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'package:realm/realm.dart';
 import '../enums.dart';
-import '/create.dart';
+import '../mock_character.dart';
 import 'models.dart';
 
 part 'character.realm.dart';

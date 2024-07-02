@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:realm/realm.dart';
 import '/globals.dart';
 import '/ui/campaignPage/encounter_builder_page.dart';
-import '/ui/ui_extras.dart';
+import '../extras/ui_extras.dart';
 import '/models/models.dart';
 
 class CampaignPage extends StatelessWidget {

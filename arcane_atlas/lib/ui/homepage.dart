@@ -5,7 +5,7 @@ import '/models/models.dart';
 import '/globals.dart';
 import 'campaignPage/campaign_page.dart';
 import 'characterBuilderPage/character_builder_page.dart';
-import 'ui_extras.dart';
+import 'extras/ui_extras.dart';
 
 /// Root widget for Gamecraft.
 class ArcaneAtlas extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '/ui/ui_extras.dart';
-import '/create.dart';
+import '../../mock_character.dart';
+import '../extras/ui_extras.dart';
 import 'character_builder.dart';
 import '/models/models.dart';
 import '/globals.dart';

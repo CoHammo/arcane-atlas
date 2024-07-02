@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '/ui/ui_extras.dart';
+import '../../models/extras.dart';
+import '../extras/ui_extras.dart';
 import '/globals.dart';
 
 class PreferencesTab extends StatefulWidget {
@@ -13,6 +14,8 @@ class _PreferencesTabState extends State<PreferencesTab>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+
+  var allSources = realm.all<Source>();
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +60,7 @@ class _PreferencesTabState extends State<PreferencesTab>
           style: Theme.of(context).textTheme.titleLarge,
         ),
         smallSpace,
-        for (var source in mCharacter!.allowedSources)
+        for (var source in allSources)
           SwitchListTile(
             title: Text(
               source.name,

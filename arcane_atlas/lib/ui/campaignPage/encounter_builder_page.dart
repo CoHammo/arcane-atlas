@@ -3,7 +3,7 @@ import '/enums.dart';
 import '/globals.dart';
 import '/models/creature.dart';
 import '/models/encounter.dart';
-import '/ui/ui_extras.dart';
+import '../extras/ui_extras.dart';
 
 class EncounterBuilderPage extends StatefulWidget {
   const EncounterBuilderPage(this.encounter, {super.key});

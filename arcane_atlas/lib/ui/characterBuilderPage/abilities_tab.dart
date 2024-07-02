@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '/globals.dart';
 import '/models/models.dart';
-import '/ui/ui_extras.dart';
+import '../extras/ui_extras.dart';
 import '/enums.dart';
 
 class AbilitiesTab extends StatefulWidget {

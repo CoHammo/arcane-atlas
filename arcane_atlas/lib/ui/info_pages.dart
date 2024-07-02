@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '/models/models.dart';
-import 'ui_extras.dart';
+import 'extras/ui_extras.dart';
 
 class RaceInfoWidget extends StatelessWidget {
   const RaceInfoWidget(this.race, {super.key});
