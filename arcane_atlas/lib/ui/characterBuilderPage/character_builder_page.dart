@@ -28,12 +28,12 @@ class CharacterBuilderPage extends StatelessWidget {
             Tab(icon: Icon(Icons.backpack), text: 'Equip'),
           ]),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
             const PreferencesTab(),
             const RaceTab(),
             const ClassTab(),
-            AbilitiesTab(),
+            const NewAbilitiesTab(),
             const DescriptionTab(),
             const EquipmentTab(),
           ],

@@ -1,9 +1,109 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:signals/signals_flutter.dart';
+import '../extras/scrolling_number_picker.dart';
 import '/globals.dart';
 import '/models/models.dart';
 import '../extras/ui_extras.dart';
 import '/enums.dart';
+
+class NewAbilitiesTab extends StatefulWidget {
+  const NewAbilitiesTab({super.key});
+
+  @override
+  State<NewAbilitiesTab> createState() => _NewAbilitiesTabState();
+}
+
+class _NewAbilitiesTabState extends State<NewAbilitiesTab>
+    with SignalsAutoDisposeMixin, AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  late final Signal<AbilityChooseMode> chooseMode =
+      createSignal(context, AbilityChooseMode.manualRolled);
+
+  late final List<Signal<Roll?>> abilityRolls =
+      List.filled(6, createSignal<Roll?>(context, null));
+
+  late final Map<AbilityScore, Signal<int>> abilitySignals = {};
+
+  @override
+  void initState() {
+    for (var abs in mCharacter!.abilities.scores.values) {
+      var s = signal(abs.value);
+      abilitySignals.addAll({abs: s});
+      effect(() {
+        abs.baseScore = s.value;
+      });
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return InfoScrollable(contentWidth: 700, children: [
+      SegmentedButton<AbilityChooseMode>(
+          segments: const [
+            ButtonSegment<AbilityChooseMode>(
+              value: AbilityChooseMode.manualRolled,
+              label: SmallText('Manual/Rolled'),
+            ),
+            ButtonSegment<AbilityChooseMode>(
+              value: AbilityChooseMode.standard,
+              label: SmallText('Standard Array'),
+            ),
+            ButtonSegment<AbilityChooseMode>(
+              value: AbilityChooseMode.pointBuy,
+              label: SmallText('Point Buy'),
+            ),
+          ],
+          selected: {
+            chooseMode.value
+          },
+          onSelectionChanged: (selection) {
+            chooseMode.value = selection.first;
+            if (chooseMode.value == AbilityChooseMode.standard) {
+              abilityRolls[0].value = Roll(total: 15);
+              abilityRolls[1].value = Roll(total: 14);
+              abilityRolls[2].value = Roll(total: 13);
+              abilityRolls[3].value = Roll(total: 12);
+              abilityRolls[4].value = Roll(total: 10);
+              abilityRolls[5].value = Roll(total: 8);
+            } else if (chooseMode.value == AbilityChooseMode.manualRolled) {
+              for (var sig in abilityRolls) {
+                sig.value = null;
+              }
+            } else {
+              for (var ab in mCharacter!.abilities.scores.values) {
+                ab.baseScore = 8;
+              }
+            }
+          }),
+      const SizedBox(height: 40),
+      Wrap(
+        direction: Axis.horizontal,
+        alignment: WrapAlignment.center,
+        spacing: 10,
+        runSpacing: 10,
+        children: [
+          for (var abs in abilitySignals.entries) ...[
+            ScrollingNumberPicker(
+              175,
+              55,
+              abs.value,
+              max: 99,
+              prefix: abs.key.type.shortName,
+              //suffix: '+${abs.key.raceBonus.toString()}',
+            ),
+          ],
+        ],
+      )
+    ]);
+  }
+}
+
+/// Below is the original implementation
 
 class AbilitiesTab extends StatefulWidget {
   AbilitiesTab({super.key});

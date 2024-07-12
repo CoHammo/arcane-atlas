@@ -10,6 +10,8 @@ class ScrollingNumberPicker extends StatelessWidget {
     this.min = 1,
     required this.max,
     this.onPressed,
+    this.prefix,
+    this.suffix,
     super.key,
   });
   final int min;
@@ -17,8 +19,10 @@ class ScrollingNumberPicker extends StatelessWidget {
   int get range => max - min;
   final double width;
   final double height;
-  final Signal number;
+  final Signal<int> number;
   final void Function()? onPressed;
+  final String? prefix;
+  final String? suffix;
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +31,29 @@ class ScrollingNumberPicker extends StatelessWidget {
       height: height,
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
-            padding: EdgeInsets.zero, shape: dndButtonShape),
+          padding: const EdgeInsets.all(10),
+          shape: dndButtonShape,
+        ),
         onPressed: onPressed ?? () {},
-        child: ListWheelScrollView(
-          controller:
-              FixedExtentScrollController(initialItem: number.value - 1),
-          physics: const FixedExtentScrollPhysics(),
-          itemExtent: height,
-          onSelectedItemChanged: (value) => number.value = value + 1,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            for (int i = min; i <= max; i++)
-              Center(child: MediumText('$i', bold: false)),
+            Flexible(flex: 0, child: Text(prefix ?? '')),
+            Expanded(
+              flex: 4,
+              child: ListWheelScrollView(
+                controller:
+                    FixedExtentScrollController(initialItem: number.value - 1),
+                physics: const FixedExtentScrollPhysics(),
+                itemExtent: height,
+                onSelectedItemChanged: (value) => number.value = value + 1,
+                children: [
+                  for (int i = min; i <= max; i++)
+                    Center(child: MediumText('$i', bold: false)),
+                ],
+              ),
+            ),
+            Flexible(flex: 0, child: Text(suffix ?? '')),
           ],
         ),
       ),

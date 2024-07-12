@@ -20,11 +20,16 @@ class _BottomDiceRollerState extends State<BottomDiceRoller>
   late final roll = createSignal(context, widget.dice.roll());
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     effect(() {
       widget.dice.numDice = numDice.value;
       widget.dice.die = die.value;
     });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
