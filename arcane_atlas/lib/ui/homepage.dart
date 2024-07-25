@@ -1,10 +1,13 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:mix/mix.dart';
 import 'package:realm/realm.dart';
 import '/models/models.dart';
 import '/globals.dart';
 import 'campaignPage/campaign_page.dart';
 import 'characterBuilderPage/character_builder_page.dart';
+import 'extras/item_list_tile.dart';
+import 'extras/styles.dart';
 import 'extras/ui_extras.dart';
 
 /// Root widget for Gamecraft.
@@ -16,22 +19,16 @@ class ArcaneAtlas extends StatelessWidget {
     return MaterialApp(
       title: 'Arcane Atlas',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
-        fontFamily: 'Sarala',
-        textTheme: const TextTheme(
-          titleLarge: TextStyle(fontWeight: FontWeight.normal),
-          titleMedium: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
-          titleSmall: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
-          labelLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
-          labelMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
-        ),
-        scaffoldBackgroundColor: Colors.white,
-        useMaterial3: true,
-      ),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+          fontFamily: 'Sarala',
+          scaffoldBackgroundColor: Colors.white,
+          useMaterial3: true,
+          navigationBarTheme: const NavigationBarThemeData(
+              labelTextStyle: WidgetStatePropertyAll(TextStyle(fontSize: 15)))),
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
-        textTheme: const TextTheme(titleLarge: TextStyle(fontSize: 20)),
-        scaffoldBackgroundColor: Color.fromARGB(255, 43, 43, 43),
+        fontFamily: 'Sarala',
+        scaffoldBackgroundColor: const Color.fromARGB(255, 43, 43, 43),
         useMaterial3: true,
       ),
       themeMode: ThemeMode.light,
@@ -54,19 +51,25 @@ class HomePage extends StatefulWidget {
 /// State of [HomePage].
 class _HomePageState extends State<HomePage> {
   int _pageIndex = 0;
-  var characters = realm.all<Character>();
-  var campaigns = realm.all<Campaign>();
+  final _characters = realm.all<Character>();
+  final _campaigns = realm.all<Campaign>();
 
   @override
   Widget build(BuildContext context) {
+    var title = '';
+    if (_pageIndex == 0) {
+      title = 'Characters';
+    } else {
+      title = 'Campaigns';
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: StyledText(title, style: Styles.titleMedium),
       ),
       body: <Widget>[
-        CharactersHome(title: 'Characters', characters: characters),
-        CampaignsHome(title: 'Campaigns', campaigns: campaigns),
+        CharactersHome(title: 'Characters', characters: _characters),
+        CampaignsHome(title: 'Campaigns', campaigns: _campaigns),
       ][_pageIndex],
       floatingActionButton: MenuAnchor(
         menuChildren: <Widget>[
@@ -82,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                 setState(() => realm.write(() => realm.add(c)));
               }
             },
-            child: const MediumText('Character Builder', bold: false),
+            child: StyledText('Character Builder', style: Styles.bodyMedium),
           ),
           MenuItemButton(
             onPressed: () => ScaffoldMessenger.of(context)
@@ -91,9 +94,10 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         builder: (context, controller, child) {
-          return DndFloatingButton(
-            'Create Character',
-            () => controller.isOpen ? controller.close() : controller.open(),
+          return FloatingActionButton(
+            onPressed: () =>
+                controller.isOpen ? controller.close() : controller.open(),
+            child: const Icon(Icons.add, size: 28),
           );
         },
       ),
@@ -130,6 +134,7 @@ class CharactersHome extends StatelessWidget {
       itemCount: characters.length,
       itemBuilder: (BuildContext context, int index) {
         return Card(
+          clipBehavior: Clip.hardEdge,
           child: ItemListTile(
             onTap: () {},
             item: characters[index],

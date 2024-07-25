@@ -1,6 +1,7 @@
+import '../extras/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:mix/mix.dart';
 import '../../mock_character.dart';
-import '../extras/ui_extras.dart';
 import 'character_builder.dart';
 import '/models/models.dart';
 import '/globals.dart';
@@ -17,7 +18,7 @@ class CharacterBuilderPage extends StatelessWidget {
       length: 6,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Character Builder'),
+          title: StyledText('Character Builder', style: Styles.titleMedium),
           surfaceTintColor: Colors.transparent,
           bottom: const TabBar(tabs: <Widget>[
             Tab(icon: Icon(Icons.settings), text: 'Prefs'),
@@ -30,25 +31,30 @@ class CharacterBuilderPage extends StatelessWidget {
         ),
         body: const TabBarView(
           children: [
-            const PreferencesTab(),
-            const RaceTab(),
-            const ClassTab(),
-            const NewAbilitiesTab(),
-            const DescriptionTab(),
-            const EquipmentTab(),
+            PreferencesTab(),
+            RaceTab(),
+            ClassTab(),
+            NewAbilitiesTab(),
+            DescriptionTab(),
+            EquipmentTab(),
           ],
         ),
-        floatingActionButton: DndFloatingButton('Finish Character', () {
-          Set readiness = mCharacter!.readiness;
-          if (readiness.first == false) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: SmallText(readiness.last)));
-          } else {
-            Character c = $Character.fromMock(mCharacter!);
-            mCharacter = null;
-            Navigator.pop(context, c);
-          }
-        }),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Set readiness = mCharacter!.readiness;
+            if (readiness.first == false) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: StyledText(readiness.last)),
+              );
+            } else {
+              Character c = $Character.fromMock(mCharacter!);
+              mCharacter = null;
+              Navigator.pop(context, c);
+            }
+          },
+          label: StyledText('Finish', style: Styles.bodyMedium),
+          extendedPadding: const EdgeInsets.all(15),
+        ),
       ),
     );
   }

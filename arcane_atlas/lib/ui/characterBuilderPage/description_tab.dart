@@ -1,11 +1,9 @@
-import 'package:arcane_atlas/ui/extras/bottom_dice_roller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../extras/option_widgets.dart';
+import '../extras/all_extras.dart';
 import '/enums.dart';
 import '/models/models.dart';
 import '/ui/info_pages.dart';
-import '../extras/ui_extras.dart';
 import '/globals.dart';
 import 'package:signals/signals_flutter.dart';
 

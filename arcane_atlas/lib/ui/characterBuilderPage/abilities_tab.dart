@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:mix/mix.dart';
 import 'package:signals/signals_flutter.dart';
-import '../extras/scrolling_number_picker.dart';
+import '../extras/all_extras.dart';
 import '/globals.dart';
 import '/models/models.dart';
-import '../extras/ui_extras.dart';
 import '/enums.dart';
 
 class NewAbilitiesTab extends StatefulWidget {
@@ -19,18 +18,32 @@ class _NewAbilitiesTabState extends State<NewAbilitiesTab>
   @override
   bool get wantKeepAlive => true;
 
-  late final Signal<AbilityChooseMode> chooseMode =
-      createSignal(context, AbilityChooseMode.manualRolled);
+  final DiceRoller dice = DiceRoller(numDice: 4, dieIndex: Dice.d6.index);
 
-  late final List<Signal<Roll?>> abilityRolls =
-      List.filled(6, createSignal<Roll?>(context, null));
+  late final chooseMode = createSignal(context, AbilityChooseMode.manualRolled);
+
+  late final List<Signal<Roll?>> abilityRolls = [
+    for (int i = 0; i < 6; i++) createSignal(context, null)
+  ];
 
   late final Map<AbilityScore, Signal<int>> abilitySignals = {};
+
+  late final raceSignal =
+      createComputed(context, () => mCharacter!.raceChange.value);
+
+  bool raceChanged = false;
+
+  late final Computed<int> points = createComputed(
+      context,
+      () =>
+          27 -
+          abilitySignals.values.fold(
+              0, (val, sig) => val += (sig.value > 8 ? sig.value - 8 : 0)));
 
   @override
   void initState() {
     for (var abs in mCharacter!.abilities.scores.values) {
-      var s = signal(abs.value);
+      var s = signal(abs.baseScore);
       abilitySignals.addAll({abs: s});
       effect(() {
         abs.baseScore = s.value;
@@ -42,45 +55,52 @@ class _NewAbilitiesTabState extends State<NewAbilitiesTab>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return InfoScrollable(contentWidth: 700, children: [
+    raceChanged = raceSignal.value;
+    return InfoScrollable(contentWidth: 600, children: [
       SegmentedButton<AbilityChooseMode>(
-          segments: const [
+          segments: [
             ButtonSegment<AbilityChooseMode>(
               value: AbilityChooseMode.manualRolled,
-              label: SmallText('Manual/Rolled'),
+              label: StyledText('Manual/Rolled', style: Styles.bodySmall),
             ),
             ButtonSegment<AbilityChooseMode>(
               value: AbilityChooseMode.standard,
-              label: SmallText('Standard Array'),
+              label: StyledText('Standard Array', style: Styles.bodySmall),
             ),
             ButtonSegment<AbilityChooseMode>(
               value: AbilityChooseMode.pointBuy,
-              label: SmallText('Point Buy'),
+              label: StyledText('Point Buy', style: Styles.bodySmall),
             ),
           ],
           selected: {
             chooseMode.value
           },
           onSelectionChanged: (selection) {
-            chooseMode.value = selection.first;
-            if (chooseMode.value == AbilityChooseMode.standard) {
+            if (selection.first == AbilityChooseMode.standard) {
               abilityRolls[0].value = Roll(total: 15);
               abilityRolls[1].value = Roll(total: 14);
               abilityRolls[2].value = Roll(total: 13);
               abilityRolls[3].value = Roll(total: 12);
               abilityRolls[4].value = Roll(total: 10);
               abilityRolls[5].value = Roll(total: 8);
-            } else if (chooseMode.value == AbilityChooseMode.manualRolled) {
-              for (var sig in abilityRolls) {
-                sig.value = null;
+              for (var abs in abilitySignals.values) {
+                abs.value = 8;
+              }
+            } else if (selection.first == AbilityChooseMode.manualRolled) {
+              for (var abs in abilitySignals.values) {
+                abs.value = 8;
+              }
+              for (var roll in abilityRolls) {
+                roll.value = null;
               }
             } else {
-              for (var ab in mCharacter!.abilities.scores.values) {
-                ab.baseScore = 8;
+              for (var abs in abilitySignals.values) {
+                abs.value = 8;
               }
             }
+            chooseMode.value = selection.first;
           }),
-      const SizedBox(height: 40),
+      const SizedBox(height: 30),
       Wrap(
         direction: Axis.horizontal,
         alignment: WrapAlignment.center,
@@ -88,313 +108,117 @@ class _NewAbilitiesTabState extends State<NewAbilitiesTab>
         runSpacing: 10,
         children: [
           for (var abs in abilitySignals.entries) ...[
-            ScrollingNumberPicker(
-              175,
-              55,
-              abs.value,
-              max: 99,
-              prefix: abs.key.type.shortName,
-              //suffix: '+${abs.key.raceBonus.toString()}',
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                StyledText(
+                  abs.key.type.name,
+                  style: Styles.bodySmall,
+                ),
+                ScrollingNumberPicker(
+                  150,
+                  50,
+                  abs.value,
+                  min: chooseMode.value == AbilityChooseMode.manualRolled
+                      ? 1
+                      : 8,
+                  max: chooseMode.value == AbilityChooseMode.manualRolled
+                      ? 99
+                      : 15,
+                  suffix:
+                      abs.key.raceBonus > 0 ? '+${abs.key.raceBonus}' : null,
+                  resetSignal: chooseMode,
+                ),
+              ],
             ),
           ],
         ],
-      )
-    ]);
-  }
-}
-
-/// Below is the original implementation
-
-class AbilitiesTab extends StatefulWidget {
-  AbilitiesTab({super.key});
-  final DiceRoller dice = DiceRoller(numDice: 4, dieIndex: Dice.d6.index);
-  final List<Roll?> abilityRolls = List.filled(6, null, growable: true);
-
-  @override
-  State<AbilitiesTab> createState() => _AbilitiesTabState();
-}
-
-class _AbilitiesTabState extends State<AbilitiesTab> {
-  Abilities abilities = mCharacter!.abilities;
-
-  int get abilityPoints {
-    return 27 -
-        abilities.scores.values.fold<int>(
-            0, (i, ab) => ab.baseScore > 8 ? i + (ab.baseScore - 8) : i);
-  }
-
-  int getAbilityPointsSpent() {
-    return 27 - abilityPoints;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return InfoScrollable(
-      contentWidth: 700,
-      children: [
-        SegmentedButton<AbilityChooseMode>(
-          segments: const [
-            ButtonSegment<AbilityChooseMode>(
-              value: AbilityChooseMode.manualRolled,
-              label: SmallText('Manual/Rolled'),
-            ),
-            ButtonSegment<AbilityChooseMode>(
-              value: AbilityChooseMode.standard,
-              label: SmallText('Standard Array'),
-            ),
-            ButtonSegment<AbilityChooseMode>(
-              value: AbilityChooseMode.pointBuy,
-              label: SmallText('Point Buy'),
-            ),
-          ],
-          selected: {mCharacter!.abilityMode},
-          onSelectionChanged: (selection) => setState(() {
-            mCharacter!.abilityMode = selection.first;
-            if (mCharacter!.abilityMode == AbilityChooseMode.standard) {
-              widget.abilityRolls.replaceRange(0, 6, [
-                Roll(total: 15),
-                Roll(total: 14),
-                Roll(total: 13),
-                Roll(total: 12),
-                Roll(total: 10),
-                Roll(total: 8)
-              ]);
-            } else if (mCharacter!.abilityMode ==
-                AbilityChooseMode.manualRolled) {
-              widget.abilityRolls.fillRange(0, 6, null);
-            } else {
-              for (var ab in abilities.scores.values) {
-                ab.baseScore = 8;
-              }
-            }
-          }),
-        ),
-        const SizedBox(height: 40),
-        Wrap(
-          direction: Axis.horizontal,
-          alignment: WrapAlignment.center,
-          spacing: 10,
-          runSpacing: 10,
-          children: [
-            for (var abs in abilities.scores.entries) ...[
-              SizedBox(
-                width: 225,
-                child: AbilityScoreRow(
-                  abs.key,
-                  abs.value,
-                  mCharacter!.abilityMode,
-                  () => setState(() {}),
-                  getAbilityPointsSpent,
-                ),
-              ),
-            ],
-          ],
-        ),
-        largeSpace,
-        if (mCharacter!.abilityMode == AbilityChooseMode.manualRolled ||
-            mCharacter!.abilityMode == AbilityChooseMode.standard) ...[
-          if (mCharacter!.abilityMode == AbilityChooseMode.manualRolled) ...[
-            Center(
-              child: SizedBox(
-                width: 160,
-                height: 40,
-                child: FilledButton(
-                  onPressed: () => setState(() {
-                    for (int i = 0; i < widget.abilityRolls.length; i++) {
-                      widget.abilityRolls[i] = widget.dice.roll(dropLowest: 1);
-                    }
-                    widget.abilityRolls
-                        .sort((a, b) => b!.total.compareTo(a!.total));
-                  }),
-                  style: FilledButton.styleFrom(shape: dndButtonShape),
-                  child: const MediumText('Roll All Dice', bold: false),
-                ),
-              ),
-            ),
-            largeSpace,
-          ],
-          Wrap(
-            direction: Axis.horizontal,
-            alignment: WrapAlignment.center,
-            spacing: 10,
-            runSpacing: 10,
-            children: [
-              for (int i = 0; i < widget.abilityRolls.length; i++) ...[
-                SizedBox(
-                  height:
-                      mCharacter!.abilityMode == AbilityChooseMode.manualRolled
-                          ? 95
-                          : 50,
-                  width: 50,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: mCharacter!.abilityMode ==
-                                  AbilityChooseMode.manualRolled
-                              ? () => setState(() => widget.abilityRolls[i] =
-                                  widget.dice.roll(dropLowest: 1))
-                              : () {},
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4)),
-                            padding: EdgeInsets.zero,
-                          ),
-                          child: LargeText(
-                            widget.abilityRolls[i]?.total.toString() ?? 'Roll',
-                            bold: false,
-                          ),
-                        ),
-                      ),
-                      if (mCharacter!.abilityMode ==
-                          AbilityChooseMode.manualRolled) ...[
-                        smallSpace,
-                        Table(
-                          border: TableBorder.all(color: Colors.grey),
-                          children: [
-                            TableRow(children: [
-                              Center(
-                                  child: SmallText(
-                                      widget.abilityRolls[i]?[0]?.toString() ??
-                                          '0')),
-                              Center(
-                                  child: SmallText(
-                                      widget.abilityRolls[i]?[1]?.toString() ??
-                                          '0')),
-                            ]),
-                            TableRow(children: [
-                              Center(
-                                  child: SmallText(
-                                      widget.abilityRolls[i]?[2]?.toString() ??
-                                          '0')),
-                              Center(
-                                  child: SmallText(
-                                      widget.abilityRolls[i]?[3]?.toString() ??
-                                          '0')),
-                            ])
-                          ],
-                        ),
-                      ],
-                    ],
-                  ),
-                )
-              ],
-            ],
-          ),
-        ] else ...[
+      ),
+      const SizedBox(height: 25),
+      if (chooseMode.value == AbilityChooseMode.pointBuy) ...[
+        Center(
+            child: StyledText('$points/27 Points', style: Styles.titleSmall)),
+      ] else ...[
+        if (chooseMode.value == AbilityChooseMode.manualRolled) ...[
           Center(
-              child: HugeText(
-            'Points: $abilityPoints/27',
-            bold: false,
-          )),
-        ]
-      ],
-    );
-  }
-}
-
-class AbilityScoreRow extends StatefulWidget {
-  const AbilityScoreRow(
-    this.name,
-    this.ab,
-    this.mode,
-    this.onChange,
-    this.pointsSpent, {
-    super.key,
-  });
-  final String name;
-  final AbilityScore ab;
-  final AbilityChooseMode mode;
-  final void Function() onChange;
-  final int Function() pointsSpent;
-
-  @override
-  State<AbilityScoreRow> createState() => _AbilityScoreRowState();
-}
-
-class _AbilityScoreRowState extends State<AbilityScoreRow> {
-  final DiceRoller dice = DiceRoller(numDice: 4, dieIndex: Dice.d6.index);
-  int get minScore => widget.mode == AbilityChooseMode.manualRolled ? 3 : 8;
-  int get maxScore => widget.mode == AbilityChooseMode.manualRolled ? 99 : 15;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 8, right: 5),
-          child: SizedBox(
-            height: 32,
-            width: 32,
-            child: FilledButton(
-                onPressed: widget.ab.baseScore > minScore
-                    ? () => setState(() {
-                          widget.ab.baseScore--;
-                          widget.onChange();
-                        })
-                    : null,
-                style: FilledButton.styleFrom(
-                    shape: dndButtonShape, padding: EdgeInsets.zero),
-                child: const Icon(Icons.remove)),
-          ),
-        ),
-        SizedBox(
-          height: 65,
-          width: 125,
-          child: TextField(
-            controller:
-                TextEditingController(text: widget.ab.baseScore.toString()),
-            maxLength: 2,
-            onChanged: (value) =>
-                widget.ab.baseScore = int.tryParse(value) ?? 8,
-            onSubmitted: (value) => setState(() {
-              widget.ab.baseScore = int.tryParse(value) ?? 8;
-              widget.onChange();
-            }),
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly
-            ],
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 20),
-            decoration: InputDecoration(
-              prefix: const SizedBox(width: 25),
-              suffix: SizedBox(
-                width: 25,
-                child: Text(
-                    widget.ab.raceBonus > 0 ? '+${widget.ab.raceBonus}' : ''),
+            child: SizedBox(
+              height: 40,
+              width: 140,
+              child: FilledButton(
+                style: FilledButton.styleFrom(shape: dndButtonShape),
+                onPressed: () {
+                  for (var roll in abilityRolls) {
+                    roll.value = dice.roll(dropLowest: 1);
+                  }
+                  abilityRolls
+                      .sort((a, b) => b.value!.total.compareTo(a.value!.total));
+                },
+                child: StyledText('Roll Dice', style: Styles.bodyMedium),
               ),
-              counterText: '',
-              contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-              border: const OutlineInputBorder(),
-              labelText: widget.name,
-              labelStyle: const TextStyle(fontSize: 18),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 8, left: 5),
-          child: SizedBox(
-            height: 32,
-            width: 32,
-            child: FilledButton(
-              onPressed: widget.ab.baseScore < maxScore &&
-                      (widget.pointsSpent() < 27 ||
-                          mCharacter!.abilityMode != AbilityChooseMode.pointBuy)
-                  ? () => setState(() {
-                        widget.ab.baseScore++;
-                        widget.onChange();
-                      })
-                  : null,
-              style: FilledButton.styleFrom(
-                  shape: dndButtonShape, padding: EdgeInsets.zero),
-              child: const Icon(Icons.add),
-            ),
-          ),
+          largeSpace,
+        ],
+        Wrap(
+          alignment: WrapAlignment.center,
+          direction: Axis.horizontal,
+          spacing: 10,
+          children: [
+            for (var roll in abilityRolls) ...[
+              Column(
+                children: [
+                  SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        shape: dndButtonShape,
+                        padding: const EdgeInsets.all(1),
+                      ),
+                      child: StyledText('${roll.value?.total ?? 'Roll'}',
+                          style: Styles.titleSmall),
+                      onPressed: () {
+                        if (chooseMode.value ==
+                            AbilityChooseMode.manualRolled) {
+                          roll.value = dice.roll(dropLowest: 1);
+                        }
+                      },
+                    ),
+                  ),
+                  smallSpace,
+                  if (chooseMode.value == AbilityChooseMode.manualRolled) ...[
+                    SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: Table(
+                        border: TableBorder.all(width: 1, color: Colors.grey),
+                        children: [
+                          TableRow(children: [
+                            StyledText('${roll.value?.rolls?[0] ?? 0}',
+                                style: Styles.bodyMedium
+                                    .add($text.textAlign.center())),
+                            StyledText('${roll.value?.rolls?[1] ?? 0}',
+                                style: Styles.bodyMedium
+                                    .add($text.textAlign.center())),
+                          ]),
+                          TableRow(children: [
+                            StyledText('${roll.value?.rolls?[2] ?? 0}',
+                                style: Styles.bodyMedium
+                                    .add($text.textAlign.center())),
+                            StyledText('${roll.value?.rolls?[3] ?? 0}',
+                                style: Styles.bodyMedium
+                                    .add($text.textAlign.center())),
+                          ])
+                        ],
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ]
+          ],
         ),
       ],
-    );
+    ]);
   }
 }

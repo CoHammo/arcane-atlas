@@ -1,8 +1,10 @@
+import 'package:mix/mix.dart';
 import 'package:signals/signals_flutter.dart';
 import '../../models/dice.dart';
 import '/enums.dart';
 import 'package:flutter/material.dart';
 import 'scrolling_number_picker.dart';
+import 'styles.dart';
 import 'ui_extras.dart';
 
 class BottomDiceRoller extends StatefulWidget {
@@ -70,11 +72,17 @@ class _BottomDiceRollerState extends State<BottomDiceRoller>
                           shape: dndButtonShape,
                           padding: const EdgeInsets.symmetric(horizontal: 5),
                         ),
-                        child: const MediumText('Roll', bold: false),
+                        child: StyledText('Roll', style: Styles.bodyMedium),
                       ),
                     ),
                     const SizedBox(width: 5),
-                    ScrollingNumberPicker(40, 40, numDice, max: 99),
+                    ScrollingNumberPicker(
+                      45,
+                      40,
+                      numDice,
+                      max: 99,
+                      textStyle: Styles.bodyLarge,
+                    ),
                     const SizedBox(width: 2),
                     SizedBox(
                       width: 50,
@@ -83,20 +91,23 @@ class _BottomDiceRollerState extends State<BottomDiceRoller>
                         menuChildren: [
                           for (var d in Dice.values)
                             MenuItemButton(
-                              child: MediumText(d.name, bold: false),
+                              child:
+                                  StyledText(d.name, style: Styles.bodyMedium),
                               onPressed: () => die.value = d,
                             ),
                         ],
                         builder: (context, controller, child) => OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                              shape: dndButtonShape,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 5)),
-                          onPressed: () => controller.isOpen
-                              ? controller.close()
-                              : controller.open(),
-                          child: MediumText(die.value.name, bold: false),
-                        ),
+                            style: OutlinedButton.styleFrom(
+                                shape: dndButtonShape,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5)),
+                            onPressed: () => controller.isOpen
+                                ? controller.close()
+                                : controller.open(),
+                            child: StyledText(
+                              die.value.name,
+                              style: Styles.bodyLarge,
+                            )),
                       ),
                     ),
                   ],

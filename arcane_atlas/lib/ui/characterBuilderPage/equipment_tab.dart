@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import '../extras/option_widgets.dart';
+import '../extras/all_extras.dart';
 import '/enums.dart';
 import '/globals.dart';
 import '/models/equipment.dart';
-import '../extras/ui_extras.dart';
 import 'package:realm/realm.dart';
 
 class EquipmentTab extends StatefulWidget {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../extras/option_widgets.dart';
+import '../extras/all_extras.dart';
 import '/models/models.dart';
-import '../extras/ui_extras.dart';
 import '/enums.dart';
 import '/ui/info_pages.dart';
 import '/globals.dart';
@@ -61,7 +60,7 @@ class _ClassTabState extends State<ClassTab>
               },
               item: allowedClasses[index],
               subtitle: 'Hit Dice: ${allowedClasses[index].hitDice}',
-              buttonTitle: 'Select',
+              buttonLabel: 'Select',
               onButtonPressed: () => setState(
                   () => mCharacter!.updateClass(allowedClasses[index])),
             );

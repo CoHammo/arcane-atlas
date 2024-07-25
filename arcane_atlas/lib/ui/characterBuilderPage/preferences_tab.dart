@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mix/mix.dart';
 import '../../models/extras.dart';
-import '../extras/ui_extras.dart';
+import '../extras/all_extras.dart';
 import '/globals.dart';
 
 class PreferencesTab extends StatefulWidget {
@@ -15,57 +16,48 @@ class _PreferencesTabState extends State<PreferencesTab>
   @override
   bool get wantKeepAlive => true;
 
-  var allSources = realm.all<Source>();
+  final _allSources = realm.all<Source>();
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return ListView(
-      padding: listPadding,
+    return InfoScrollable(
+      contentWidth: maxWidth,
       children: [
         BigImage(mCharacter!.image),
         Center(
           child: SizedBox(
-            width: 400,
             child: TextField(
               controller: TextEditingController(text: mCharacter!.name),
               maxLines: null,
               onChanged: (value) => mCharacter!.name = value,
               decoration: const InputDecoration(
                   border: OutlineInputBorder(), labelText: 'Character Name'),
-              style: Theme.of(context).textTheme.titleLarge,
+              style: const TextStyle(fontSize: 24),
             ),
           ),
         ),
         const SizedBox(height: 25),
-        Text(
+        StyledText(
           'Select Preferences',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleLarge,
+          style: Styles.titleMedium.add($text.textAlign.center()),
         ),
         smallSpace,
         for (var pref in mCharacter!.prefs.keys)
           SwitchListTile(
-              title: Text(
-                'Allow $pref',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
+              title: StyledText('Allow $pref', style: Styles.bodyMedium),
               value: mCharacter!.prefs[pref] ?? false,
               onChanged: (value) =>
                   setState(() => mCharacter!.prefs[pref] = value)),
         const Divider(thickness: 2, height: 50),
-        Text(
+        StyledText(
           'Select Allowed Sources',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleLarge,
+          style: Styles.titleMedium.add($text.textAlign.center()),
         ),
         smallSpace,
-        for (var source in allSources)
+        for (var source in _allSources)
           SwitchListTile(
-            title: Text(
-              source.name,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            title: StyledText(source.name, style: Styles.bodyMedium),
             value: mCharacter!.allowedSources.value.contains(source),
             onChanged: (bool? value) {
               setState(() {

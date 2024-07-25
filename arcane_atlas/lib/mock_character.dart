@@ -14,7 +14,14 @@ class MockCharacter implements IName {
 
   AbilityChooseMode abilityMode = AbilityChooseMode.manualRolled;
 
-  Race? race;
+  Signal<bool> raceChange = signal(false);
+  Race? _race;
+  Race? get race => _race;
+  set race(Race? r) {
+    _race = r;
+    raceChange.value ? raceChange.value = false : raceChange.value = true;
+  }
+
   Class? dndClass;
   Background? background;
 

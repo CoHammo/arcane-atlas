@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:realm/realm.dart';
 import 'package:signals/signals_flutter.dart';

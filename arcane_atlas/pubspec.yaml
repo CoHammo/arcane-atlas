@@ -35,6 +35,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   realm: ^3.0.0
   signals: ^5.2.2
+  mix: ^1.2.0
 
 dev_dependencies:
   flutter_test:

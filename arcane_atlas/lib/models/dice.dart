@@ -81,6 +81,6 @@ class Roll {
 
   @override
   String toString() {
-    return name ?? total.toString();
+    return name != null ? '$total ($name)' : '$total';
   }
 }

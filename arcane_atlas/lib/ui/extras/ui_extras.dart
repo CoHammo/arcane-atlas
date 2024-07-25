@@ -9,7 +9,7 @@ const hugeText = TextScaler.linear(1.8);
 const largeText = TextScaler.linear(1.5);
 const mediumText = TextScaler.linear(1.3);
 const smallText = TextScaler.linear(1.05);
-const listPadding = EdgeInsets.fromLTRB(10, 10, 10, 170);
+const listPadding = EdgeInsets.fromLTRB(15, 10, 15, 200);
 const double maxWidth = 900;
 final dndButtonShape =
     RoundedRectangleBorder(borderRadius: BorderRadius.circular(4));
@@ -177,104 +177,6 @@ class _DiceWidgetState extends State<DiceWidget> {
           child: const Icon(Icons.square),
         ),
       ],
-    );
-  }
-}
-
-class DndFloatingButton extends StatelessWidget {
-  const DndFloatingButton(this.label, this.onPressed, {super.key});
-  final String label;
-  final void Function()? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton.extended(
-      extendedPadding: const EdgeInsets.symmetric(horizontal: 10),
-      onPressed: onPressed,
-      label: Text(
-        label,
-        style: Theme.of(context).textTheme.titleMedium,
-      ),
-    );
-  }
-}
-
-class InfoScrollable extends StatelessWidget {
-  const InfoScrollable({
-    required this.children,
-    this.contentWidth = maxWidth,
-    super.key,
-  });
-  final List<Widget> children;
-  final double contentWidth;
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: listPadding,
-        child: Center(
-          child: SizedBox(
-            width: contentWidth,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: children,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ItemListTile extends StatelessWidget {
-  const ItemListTile({
-    required this.item,
-    this.subtitle,
-    this.buttonTitle,
-    this.onTap,
-    this.onButtonPressed,
-    super.key,
-  });
-  final IName item;
-  final String? subtitle;
-  final String? buttonTitle;
-  final void Function()? onTap;
-  final void Function()? onButtonPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTap,
-      title: Row(
-        children: [
-          if (item is IImage && (item as IImage).image != null) ...[
-            SizedBox(
-              height: 55,
-              child: Image.memory((item as IImage).image!),
-            )
-          ],
-          const SizedBox(width: 15),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(item.name, style: Theme.of(context).textTheme.titleMedium),
-              if (subtitle != null) Text(subtitle!),
-            ],
-          ),
-        ],
-      ),
-      trailing: buttonTitle == null
-          ? null
-          : SizedBox(
-              height: 35,
-              child: FilledButton(
-                style: FilledButton.styleFrom(
-                    shape: dndButtonShape, padding: EdgeInsets.zero),
-                onPressed: onButtonPressed,
-                child: SmallText(buttonTitle!),
-              ),
-            ),
     );
   }
 }
